@@ -19,9 +19,9 @@ import weka.core.Instances;
 public class LDPS extends AbstractClassifier {
 
 	Instances train;
-	int K = 5;
+	int K = 10;
 	PatternSet ps;
-	double minSupp = 0.3;
+	double minSupp = 0.10;
 	@Override
 	public void buildClassifier(Instances data) throws Exception {
 		// TODO Auto-generated method stub
@@ -84,8 +84,8 @@ public class LDPS extends AbstractClassifier {
 			Instances train = DataUtils.load("data/original/"+file+"_train.arff");
 			Instances test = DataUtils.load("data/original/"+file+"_test.arff");
 			
-			AbstractClassifier cl = new LDPS();
-//			AbstractClassifier cl = ClassifierGenerator.getClassifier(ClassifierType.DECISION_TREE);
+//			AbstractClassifier cl = new LDPS();
+			AbstractClassifier cl = ClassifierGenerator.getClassifier(ClassifierType.DECISION_TREE);
 			cl.buildClassifier(train);
 			
 			Evaluation eval = new Evaluation(test);

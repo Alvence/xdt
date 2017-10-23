@@ -13,24 +13,26 @@ import com.yunzhejia.cpxc.util.DataUtils;
 
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Evaluation;
+import weka.classifiers.trees.J48;
 import weka.core.Instance;
 import weka.core.Instances;
 
 public class ModelEvaluation {
 	public static void main(String[] args) throws Exception{
-//		String[] files = {/*"adult",*/"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
+		String[] files = {/*"adult",*/"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
 //		ClassifierType[] types = {ClassifierType.DECISION_TREE, ClassifierType.LOGISTIC, ClassifierType.NAIVE_BAYES, ClassifierType.RANDOM_FOREST, ClassifierType.SVM};
-//		Double[] rates = {0.0 ,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0};
-		ClassifierType[] types = {ClassifierType.DECISION_TREE};
-		String[] files = {"anneal","diabetes","labor","vote"};
-		Double[] rates = {0.0, 1.0};
+		Double[] rates = {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
+		ClassifierType[] types = {ClassifierType.LOGISTIC};
+//		String[] files = {"anneal","diabetes","labor","vote"};
+//		Double[] rates = {0.0, 1.0};
 		PrintWriter writer = new PrintWriter(new File("tmp/stats.txt"));
 		for(String file:files){
 			Instances train = DataUtils.load("data/modified/"+file+"_train.arff");
 			Instances test = DataUtils.load("data/modified/"+file+"_test.arff");
 
 			
-			AbstractClassifier oracle = ClassifierGenerator.getClassifier(ClassifierType.DECISION_TREE);
+			AbstractClassifier oracle = ClassifierGenerator.getClassifier(ClassifierType.DECISION_TREE
+					);
 			oracle.buildClassifier(DataUtils.load("data/original/"+file+"_train.arff"));
 			
 			for(ClassifierType type:types){
@@ -61,7 +63,7 @@ public class ModelEvaluation {
 		int count = 0;
 		//explanation quality
 		for(Instance ins:test){
-			Set<Integer> trueX = DTTruth.getGoldFeature(oracle, ins);
+			Set<Integer> trueX = ClassifierTruth.getGoldFeature(oracle, ins,0.01);
 			Set<Integer> X = DTTruth.getGoldFeature(xdt, ins);
 			
 			int union = 0;
@@ -82,7 +84,7 @@ public class ModelEvaluation {
 			avgF1 += f1;
 			count++;
 		}
-//		count = test.size();
+		count = test.size();
 		avgPrecision /=count;
 		avgRecall/=count;
 		avgF1/=count;
@@ -110,7 +112,8 @@ public class ModelEvaluation {
 		// TODO Auto-generated method stub
 		Map<Long, Set<Integer>>  ret = new HashMap<>();
 		for(Instance ins:train){
-			Set<Integer> trueX = DTTruth.getGoldFeature(oracle, ins);
+			Set<Integer> trueX = null;
+			trueX = ClassifierTruth.getGoldFeature(oracle, ins, 0.01);
 			
 			if(Math.random() < percentageOfExplanation){
 				ret.put(ins.getID(), trueX);
@@ -124,7 +127,7 @@ public class ModelEvaluation {
 	public static Instances modifyDataUsingX(Instances data, AbstractClassifier cl, double percentageOfExplanation) throws Exception{
 		Instances ret = new Instances(data);
 		for(Instance ins:ret){
-			Set<Integer> trueX = DTTruth.getGoldFeature(cl, ins);
+			Set<Integer> trueX =  ClassifierTruth.getGoldFeature(cl, ins,0.01);;
 			
 			if(Math.random() < percentageOfExplanation){
 				for(int i =0 ; i < ins.numAttributes()-1;i++){
