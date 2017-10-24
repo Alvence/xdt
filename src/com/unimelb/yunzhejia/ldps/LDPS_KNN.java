@@ -11,6 +11,7 @@ import com.yunzhejia.pattern.IPattern;
 import com.yunzhejia.pattern.PatternSet;
 import com.yunzhejia.pattern.patternmining.AprioriContrastPatternMiner;
 import com.yunzhejia.pattern.patternmining.IPatternMiner;
+import com.yunzhejia.pattern.patternmining.RFContrastPatternMiner;
 
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Evaluation;
@@ -19,13 +20,13 @@ import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.Utils;
 
-public class LDPS extends AbstractClassifier {
+public class LDPS_KNN extends AbstractClassifier {
 
 	Instances train;
 	int K = 10;
 	Map<Integer, PatternSet> patterns;
-	double minSupp = 0.1;
-	double minRatio = 3;
+	double minSupp = 0.01;
+	double minRatio = 5;
 	int defaultClass=-1;
 	@Override
 	public void buildClassifier(Instances data) throws Exception {
@@ -36,14 +37,14 @@ public class LDPS extends AbstractClassifier {
 		discretizer.initialize(train);
 //		IPatternMiner pm = new RFPatternMiner();
 //		IPatternMiner pm = new AprioriPatternMiner(discretizer);
-		IPatternMiner pm = new AprioriContrastPatternMiner(discretizer);
-		
+//		IPatternMiner pm = new AprioriContrastPatternMiner(discretizer);
+		IPatternMiner pm = new RFContrastPatternMiner();
 		int maxSize = -1;
 		
 		patterns = new HashMap<>();
 		for(int i = 0; i < data.numClasses(); i++){
 			PatternSet ps = pm.minePattern(train, minSupp, minRatio, i);
-//			System.out.println(i+ ": "+ps.size());
+			System.out.println(i+ ": "+ps.size());
 			patterns.put(i, ps);
 			if(maxSize<ps.size()){
 				maxSize = ps.size();
@@ -116,7 +117,8 @@ public class LDPS extends AbstractClassifier {
 	}
 	*/
 	public static void main(String[] args) throws Exception{
-		String[] files = {/*"adult","anneal",*/"balloon","blood","breast-cancer","diabetes","ILPD","iris","labor","vote","hepatitis","ionosphere"};
+//		String[] files = {/*"adult","anneal",*/"balloon","blood","breast-cancer","diabetes","ILPD","iris","labor","vote","hepatitis","ionosphere"};
+		String[] files = {/*"adult","anneal",*/"balloon"};
 //		ClassifierType[] types = {ClassifierType.DECISION_TREE, ClassifierType.LOGISTIC, ClassifierType.NAIVE_BAYES, ClassifierType.RANDOM_FOREST};
 		ClassifierType[] types = {ClassifierType.DECISION_TREE};
 //		PrintWriter writer = new PrintWriter(new File("tmp/stats.txt"));
@@ -124,16 +126,16 @@ public class LDPS extends AbstractClassifier {
 			for(ClassifierType type:types){
 			Instances train = DataUtils.load("data/original/"+file+"_train.arff");
 			Instances test = DataUtils.load("data/original/"+file+"_test.arff");
-			train.deleteAttributeAt(2);
-//			AbstractClassifier cl = new LDPS();
-			AbstractClassifier cl = ClassifierGenerator.getClassifier(type);
+			
+			AbstractClassifier cl = new MY_LWL();
+//			AbstractClassifier cl = ClassifierGenerator.getClassifier(type);
 			cl.buildClassifier(train);
 			
-			Evaluation eval = new Evaluation(test);
-			test.deleteAttributeAt(2);
-			eval.evaluateModel(cl, test);
-			
-			System.out.println("data ="+ file +" accuracy="+ eval.pctCorrect());
+//			Evaluation eval = new Evaluation(test);
+//			
+//			eval.evaluateModel(cl, test);
+//			
+//			System.out.println("data ="+ file +" accuracy="+ eval.pctCorrect());
 		}}
 //		writer.close();
 	}
