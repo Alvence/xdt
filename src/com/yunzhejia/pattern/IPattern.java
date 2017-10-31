@@ -26,6 +26,9 @@ public interface IPattern {
 	public double support(Instances data);
 	public double support();
 	public double ratio();
+	public double lenghth();
+	
+	public boolean contrainAttr(int i);
 	public void setRatio(double r);
 	public Set<ICondition> getConditions();
 	public IPattern conjuction(IPattern p);

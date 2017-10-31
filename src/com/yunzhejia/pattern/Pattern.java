@@ -23,18 +23,21 @@ public class Pattern implements IPattern {
 	private Instances associatedData;
 	private Instances mds;
 	private double ratio;
+	private Set<Integer> attrSet = new HashSet<>();
 	
 	private Pattern(){}
 	public Pattern(ICondition condition) {
 		id = UUID.randomUUID().toString();
 		this.conditions = new HashSet<>();
 		this.conditions.add(condition);
+		attrSet.add(condition.getAttrIndex());
 	}
 	static int c = 1;
 	public Pattern(Set<ICondition> conditions) {
 		id = UUID.randomUUID().toString();
 		for(ICondition con:conditions){
 			addCondition(con);
+			attrSet.add(con.getAttrIndex());
 		}
 //		this.conditions = conditions;
 //		Pattern p = new Pattern();
@@ -45,11 +48,16 @@ public class Pattern implements IPattern {
 		
 	}
 	
+	public boolean contrainAttr(int i){
+		return attrSet.contains(i);
+	}
+	
 
 	private void addCondition(ICondition condition){
 		if (this.conditions==null){
 			this.conditions = new HashSet<>();
 		}
+		attrSet.add(condition.getAttrIndex());
 		if (condition instanceof NumericCondition){
 			NumericCondition numCon = (NumericCondition)condition;
 			boolean flag = true;
@@ -278,6 +286,10 @@ public class Pattern implements IPattern {
 	@Override
 	public boolean subset(IPattern p) {
 		return this.conditions.containsAll(p.getConditions());
+	}
+	@Override
+	public double lenghth() {
+		return conditions.size();
 	}
 	
 }

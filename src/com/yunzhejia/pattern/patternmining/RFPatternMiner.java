@@ -19,6 +19,7 @@ import weka.classifiers.trees.RandomForest;
 import weka.classifiers.trees.RandomTree;
 import weka.classifiers.trees.RandomTree.Tree;
 import weka.core.Instances;
+import weka.core.Utils;
 
 public class RFPatternMiner implements IPatternMiner {
 	
@@ -78,14 +79,14 @@ public class RFPatternMiner implements IPatternMiner {
 		}
 		if(conditions != null && !conditions.isEmpty() ){
 //			System.out.println("con= "+conditions);
-			patterns.add(new Pattern(conditions));
+//			patterns.add(new Pattern(conditions));
 		}
 		if (tree.m_Attribute == -1){
-//			if(conditions != null && !conditions.isEmpty() && tree.m_ClassDistribution != null){
-//				if(tree.m_ClassDistribution[Utils.maxIndex(tree.m_ClassDistribution)] >= minSupport){
-//					patterns.add(new Pattern(conditions));
-//				}
-//			}
+			if(conditions != null && !conditions.isEmpty() && tree.m_ClassDistribution != null){
+				if(tree.m_ClassDistribution[Utils.maxIndex(tree.m_ClassDistribution)] >= minSupport){
+					patterns.add(new Pattern(conditions));
+				}
+			}
 			
 		}else if (m_Info.attribute(tree.m_Attribute).isNominal()) {
 
