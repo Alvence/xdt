@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import com.unimelb.yunzhejia.xdt.ClassifierTruth;
 import com.yunzhejia.cpxc.util.ClassifierGenerator.ClassifierType;
 import com.yunzhejia.cpxc.util.DataUtils;
 import com.yunzhejia.pattern.ICondition;
@@ -44,7 +45,7 @@ import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.SingleClassifierEnhancer;
 import weka.classifiers.UpdateableClassifier;
-import weka.classifiers.trees.RandomForest;
+import weka.classifiers.lazy.LWL;
 import weka.core.Capabilities;
 import weka.core.Capabilities.Capability;
 import weka.core.Instance;
@@ -59,9 +60,6 @@ import weka.core.Utils;
 import weka.core.WeightedInstancesHandler;
 import weka.core.neighboursearch.LinearNNSearch;
 import weka.core.neighboursearch.NearestNeighbourSearch;
-import weka.filters.Filter;
-import weka.filters.unsupervised.attribute.NominalToBinary;
-import weka.filters.unsupervised.attribute.Normalize;
 
 /**
  <!-- globalinfo-start -->
@@ -930,39 +928,47 @@ public class FP_KNN
    * @param argv the options
    */
 	public static void main(String[] args) throws Exception{
-		String[] files = {/*"adult",*/"anneal","balloon","blood","breast-cancer","diabetes","ILPD","iris","labor","vote","hepatitis","ionosphere"};
-//		String[] files = {/*"adult","anneal",*/"iris"};
+//		String[] files = {"adult","anneal","balloon","blood","breast-cancer","chess","crx","diabetes","glass","hepatitis","ILPD","ionosphere"
+//		,"iris","labor","planning","sick","vote"};
+		String[] files = {"anneal","balloon","blood","breast-cancer","chess","crx","diabetes","glass","hepatitis","ionosphere"
+				,"iris","labor","sick","vote"};
+//		String[] files = {"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
+//		String[] files = {"anneal"};
 //		ClassifierType[] types = {ClassifierType.DECISION_TREE, ClassifierType.LOGISTIC, ClassifierType.NAIVE_BAYES, ClassifierType.RANDOM_FOREST};
 		ClassifierType[] types = {ClassifierType.DECISION_TREE};
 //		PrintWriter writer = new PrintWriter(new File("tmp/stats.txt"));
 		for(String file:files){
 			for(ClassifierType type:types){
-			Instances train = DataUtils.load("data/original/"+file+"_train.arff");
-			Instances test = DataUtils.load("data/original/"+file+"_test.arff");
+			Instances train = DataUtils.load("data/modified/"+file+"_train.arff");
+			Instances test = DataUtils.load("data/modified/"+file+"_test.arff");
 			
-			NominalToBinary filter = new NominalToBinary();
-			filter.setInputFormat(train);  // initializing the filter once with training set
-			Instances newTrain = Filter.useFilter(train, filter);  // configures the Filter based on train instances and returns filtered instances
-			Instances newTest = Filter.useFilter(test, filter);    // create new test set
-			
-			
-			Normalize norm = new Normalize();
-			norm.setInputFormat(newTrain);  // initializing the filter once with training set
-			newTrain = Filter.useFilter(newTrain, norm);  // configures the Filter based on train instances and returns filtered instances
-			newTest = Filter.useFilter(newTest, norm);    // create new test set
+//			NominalToBinary filter = new NominalToBinary();
+//			filter.setInputFormat(train);  // initializing the filter once with training set
+//			Instances newTrain = Filter.useFilter(train, filter);  // configures the Filter based on train instances and returns filtered instances
+//			Instances newTest = Filter.useFilter(test, filter);    // create new test set
+//			
+//			
+//			Normalize norm = new Normalize();
+//			norm.setInputFormat(newTrain);  // initializing the filter once with training set
+//			newTrain = Filter.useFilter(newTrain, norm);  // configures the Filter based on train instances and returns filtered instances
+//			newTest = Filter.useFilter(newTest, norm);    // create new test set
+//			System.out.println(newTrain);
 //			System.out.println(newTrain);
 			
 			
-			AbstractClassifier cl = new FP_KNN();
-//			AbstractClassifier cl = new LWL();
+//			FP_KNN cl = new FP_KNN();
+			AbstractClassifier cl = new LWL();
 //			AbstractClassifier cl = new RandomForest();
 //			AbstractClassifier cl = ClassifierGenerator.getClassifier(type);
 			
+			Map<Long, Set<Integer>> expls = ClassifierTruth.readFromFile("data/modified/expl/"+file+"_train.expl");
 			
-			Evaluation eval = new Evaluation(newTest);
-			cl.buildClassifier(newTrain);
 			
-			eval.evaluateModel(cl, newTest);
+			Evaluation eval = new Evaluation(test);
+			
+			cl.buildClassifier(train);
+//			cl.buildClassifierWithExpl(train, expls);
+			eval.evaluateModel(cl, test);
 			
 			System.out.println("data ="+ file +" accuracy="+ eval.pctCorrect());
 		}}

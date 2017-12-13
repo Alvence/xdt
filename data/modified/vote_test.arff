@@ -1,4 +1,4 @@
-@relation vote
+@relation vote-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
 
 @attribute handicapped-infants {n,y}
 @attribute water-project-cost-sharing {n,y}
