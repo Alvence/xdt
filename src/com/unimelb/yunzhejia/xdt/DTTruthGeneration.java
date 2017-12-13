@@ -22,7 +22,7 @@ public class DTTruthGeneration {
 			
 			
 			for(Instance ins:train){
-				if(Math.random()<1){
+				if(Math.random()<0.5){
 					ins.setClassValue(cl.classifyInstance(ins));
 				}else{
 					ins.setClassValue(rand.nextInt(train.numClasses()));

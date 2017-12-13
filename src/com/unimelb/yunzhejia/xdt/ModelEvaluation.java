@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.unimelb.yunzhejia.ldps.FP_KNN;
 import com.unimelb.yunzhejia.xdt.cl.M_J48;
 import com.yunzhejia.cpxc.util.ClassifierGenerator;
 import com.yunzhejia.cpxc.util.ClassifierGenerator.ClassifierType;
@@ -13,7 +14,6 @@ import com.yunzhejia.cpxc.util.DataUtils;
 
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Evaluation;
-import weka.classifiers.trees.J48;
 import weka.core.Instance;
 import weka.core.Instances;
 
@@ -22,7 +22,7 @@ public class ModelEvaluation {
 		String[] files = {/*"adult",*/"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
 //		ClassifierType[] types = {ClassifierType.DECISION_TREE, ClassifierType.LOGISTIC, ClassifierType.NAIVE_BAYES, ClassifierType.RANDOM_FOREST, ClassifierType.SVM};
 		Double[] rates = {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
-		ClassifierType[] types = {ClassifierType.LOGISTIC};
+		ClassifierType[] types = {ClassifierType.RANDOM_FOREST};
 //		String[] files = {"anneal","diabetes","labor","vote"};
 //		Double[] rates = {0.0, 1.0};
 		PrintWriter writer = new PrintWriter(new File("tmp/stats.txt"));
@@ -38,11 +38,27 @@ public class ModelEvaluation {
 			for(ClassifierType type:types){
 				for(double rate:rates){
 //					evalute(oracle,type,train,test,rate, writer,file);
-					evaluteXDT(oracle,type,train,test,rate, writer,file);
+					evaluteFP_KNN(oracle,type,train,test,rate, writer,file);
+//					evaluteXDT(oracle,type,train,test,rate, writer,file);
 		}}}
 		writer.close();
 	}
 	
+	private static void evaluteFP_KNN(AbstractClassifier oracle, ClassifierType type, Instances train, Instances test,
+			double percentageOfExplanation, PrintWriter writer, String file) throws Exception {
+		Map<Long, Set<Integer>> expls = getExpls(train, oracle, percentageOfExplanation);
+		FP_KNN cl= new FP_KNN();
+		cl.buildClassifierWithExpl(train,expls);
+		
+		Evaluation eval = new Evaluation(test);
+		
+		eval.evaluateModel(cl, test);
+		
+		System.out.println("data ="+ file +" accuracy="+ eval.pctCorrect() +"  cl="+ type +"  explRate="+percentageOfExplanation);
+		writer.println("data ="+ file + "accuracy="+ eval.pctCorrect() + "  cl="+type +"  explRate="+percentageOfExplanation);
+		
+	}
+
 	public static void evaluteXDT(AbstractClassifier oracle, ClassifierType type, Instances train, Instances test, double percentageOfExplanation, PrintWriter writer, String file) throws Exception{
 //		Instances newTrain = modifyDataUsingX(train,oracle,percentageOfExplanation);
 //		AbstractClassifier cl = ClassifierGenerator.getClassifier(type);
@@ -50,6 +66,7 @@ public class ModelEvaluation {
 //		Instances newTrain = modifyDataUsingX(train,oracle,percentageOfExplanation);
 		Map<Long, Set<Integer>> expls = getExpls(train, oracle, percentageOfExplanation);
 		M_J48 xdt = new M_J48();
+//		FP_KNN xdt= new FP_KNN();
 //		System.out.println(expls.size());
 		xdt.buildClassifierWithExpl(train, expls);
 //		xdt.buildClassifier(train);

@@ -33,7 +33,6 @@ import java.util.Vector;
 
 import com.yunzhejia.cpxc.util.ClassifierGenerator.ClassifierType;
 import com.yunzhejia.cpxc.util.DataUtils;
-import com.yunzhejia.cpxc.util.Discretizer;
 import com.yunzhejia.pattern.ICondition;
 import com.yunzhejia.pattern.IPattern;
 import com.yunzhejia.pattern.PatternSet;
@@ -42,8 +41,10 @@ import com.yunzhejia.pattern.patternmining.RFPatternMiner;
 
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
+import weka.classifiers.Evaluation;
 import weka.classifiers.SingleClassifierEnhancer;
 import weka.classifiers.UpdateableClassifier;
+import weka.classifiers.trees.RandomForest;
 import weka.core.Capabilities;
 import weka.core.Capabilities.Capability;
 import weka.core.Instance;
@@ -525,7 +526,7 @@ public class FP_KNN
 	  buildClassifierWithExpl(instances,null);
   }
   
-  public void buildClassifierWithExpl(Instances instances, Map<Long, List<Integer>> expls) throws Exception {
+  public void buildClassifierWithExpl(Instances instances, Map<Long, Set<Integer>> expls) throws Exception {
 
 	    if (!(m_Classifier instanceof WeightedInstancesHandler)) {
 	      throw new IllegalArgumentException("Classifier must be a "
@@ -554,26 +555,50 @@ public class FP_KNN
 	    
 	    m_Train = new Instances(instances, 0, instances.numInstances());
 
-	    Discretizer discretizer = new Discretizer();
-		discretizer.initialize(m_Train);
+//	    Discretizer discretizer = new Discretizer();
+//		discretizer.initialize(m_Train);
 		PatternSet ps;
 		IPatternMiner pm = new RFPatternMiner();
 		ps = pm.minePattern(m_Train, minSupp);
-		System.out.println("pattern size="+ps.size());
+//		System.out.println("pattern size="+ps.size());
 		ins2patterns = new HashMap<Instance, List<IPattern>>();
+		pattern2ins = new HashMap<>();
+		
 		for(Instance ins: m_Train){
 			List<IPattern> matches = new ArrayList<IPattern>();
 			for(IPattern p:ps){
+				if(!pattern2ins.containsKey(p)){
+					pattern2ins.put(p, new Instances(m_Train,0));
+				}
 				if (p.match(ins)){
 					matches.add(p);
+					Instance newIns = (Instance)ins.copy();
+					for(int i = 0; i < newIns.numAttributes()-1;i++){
+						if(!p.contrainAttr(i)){
+							newIns.setValue(i, 0);
+						}
+					}
+					if(expls==null || sim(p,expls.get(ins))<0.5){
+						pattern2ins.get(p).add(newIns);
+					}
 				}
 			}
 			ins2patterns.put(ins, matches);
 		}
 		
+		pattern2searches = new HashMap<>();
+		for(IPattern p:pattern2ins.keySet()){
+			if(pattern2ins.get(p)!=null && pattern2ins.get(p).size()>0){
+				NearestNeighbourSearch mySearch = new LinearNNSearch();
+				mySearch.setInstances(pattern2ins.get(p));
+				pattern2searches.put(p, mySearch);
+			}
+		}
+		
 		ins2pattern = new HashMap<>();
 		patternSet = new HashSet<>();
 		
+		/*
 		for(Instance ins: m_Train){
 			IPattern p = getPattern(m_Train, ins, ins2patterns.get(ins), expls==null?null:expls.get(ins.getID()));
 			ins2pattern.put(ins, p);
@@ -587,17 +612,19 @@ public class FP_KNN
 			}
 		}
 		
-		
-		System.out.println("pattern size="+patternSet.size());
+		*/
+//		System.out.println("pattern size="+pattern2searches.size());
 //	    System.out.println(ins2pattern);
-	    System.out.println(patternSet);
+//	    System.out.println(patternSet);
 	    m_NNSearch.setInstances(m_Train);
-	    System.out.println(m_Train);
+//	    System.out.println(m_Train);
 	    
   }
   
 
   public Map<Instance, List<IPattern>> ins2patterns;
+  public Map<IPattern, Instances> pattern2ins;
+  public Map<IPattern, NearestNeighbourSearch> pattern2searches;
   public Map<Instance, IPattern> ins2pattern;
   public Set<IPattern> patternSet;
   
@@ -610,6 +637,22 @@ public class FP_KNN
   Map<Instance, Classifier> localModels;
   Instances currentTrain;
   NearestNeighbourSearch mySearch = new LinearNNSearch();
+  
+  private double sim(IPattern pattern, Set<Integer> expl){
+	  if (expl==null || expl.size()==0){
+		  return 0;
+	  }
+	  Set<Integer> atts = new HashSet<Integer>(expl);
+	  int union = 0;
+	  for(ICondition cond:pattern.getConditions()){
+		  if(atts.contains(cond.getAttrIndex())){
+			  union++;
+		  }
+		  atts.add(cond.getAttrIndex());
+	  }
+	  double jac = union*1.0/atts.size();
+	  return 1-jac;
+  }
   
   private IPattern getPattern(Instances data, Instance ins, List<IPattern> ps, List<Integer> expl){
 	  if (ps==null || ps.size() == 0){
@@ -641,28 +684,39 @@ public class FP_KNN
 	  
 	  return ret;
   }
-  public void updateCurrentTrain() throws Exception{
-	  currentTrain = new Instances(m_Train);
-	    for(int i = 0; i < omega.length; i++){
-	    	for(int j = 0; j < omega[i].length; j++){
-	    		double oldV = currentTrain.get(i).value(j);
-	    		currentTrain.get(i).setValue(j, oldV*omega[i][j]);
-	    	}
-	    }
-	    
-	    mySearch.setInstances(currentTrain);
-  }
   
   @Override
   public double[] distributionForInstance(Instance instance) throws Exception {
 	  double[] probs = new double[m_Train.numClasses()];
-	  Instances neigh = mySearch.kNearestNeighbours(instance, k);
-	  double[] distances = mySearch.getDistances();
-	  double max = distances[k-1];
 	  
-	  for(int i = 0; i < neigh.numInstances(); i++){
-		  int pred = (int) neigh.get(i).classValue();
-		  probs[pred]+= (1.001- (max!=0?distances[i]/max:0));
+	  
+	  boolean found= false;
+	  
+	  for(IPattern p :pattern2searches.keySet()){
+		  if(p.match(instance)){
+			  
+			  found = true;
+			  Instance temp = (Instance)instance.copy();
+			  for(int i = 0; i < temp.numAttributes()-1; i++){
+				  if(!p.contrainAttr(i)){
+					  temp.setValue(i, 0);
+				  }
+			  }
+			  /*double c = m_NNSearch.nearestNeighbour(instance).classValue();
+			  */
+			  Instances nei =  pattern2searches.get(p).kNearestNeighbours(instance, k);
+			  for(Instance ins: nei){
+				  double c = ins.classValue();
+				  probs[(int)c] += 1;
+			  }
+//			  double c = pattern2searches.get(p).nearestNeighbour(instance).classValue();
+//			  probs[(int)c] += 1;
+		  }
+	  }
+	  
+	  if(!found){
+		  double defaultClass = m_NNSearch.nearestNeighbour(instance).classValue();
+		  probs[(int)defaultClass] += 1;
 	  }
 	  Utils.normalize(probs);
 	  
@@ -876,8 +930,8 @@ public class FP_KNN
    * @param argv the options
    */
 	public static void main(String[] args) throws Exception{
-//		String[] files = {/*"adult","anneal",*/"balloon","blood","breast-cancer","diabetes","ILPD","iris","labor","vote","hepatitis","ionosphere"};
-		String[] files = {/*"adult","anneal",*/"blood"};
+		String[] files = {/*"adult",*/"anneal","balloon","blood","breast-cancer","diabetes","ILPD","iris","labor","vote","hepatitis","ionosphere"};
+//		String[] files = {/*"adult","anneal",*/"iris"};
 //		ClassifierType[] types = {ClassifierType.DECISION_TREE, ClassifierType.LOGISTIC, ClassifierType.NAIVE_BAYES, ClassifierType.RANDOM_FOREST};
 		ClassifierType[] types = {ClassifierType.DECISION_TREE};
 //		PrintWriter writer = new PrintWriter(new File("tmp/stats.txt"));
@@ -901,14 +955,16 @@ public class FP_KNN
 			
 			AbstractClassifier cl = new FP_KNN();
 //			AbstractClassifier cl = new LWL();
+//			AbstractClassifier cl = new RandomForest();
 //			AbstractClassifier cl = ClassifierGenerator.getClassifier(type);
+			
+			
+			Evaluation eval = new Evaluation(newTest);
 			cl.buildClassifier(newTrain);
 			
-//			Evaluation eval = new Evaluation(newTest);
-//			
-//			eval.evaluateModel(cl, newTest);
-//			
-//			System.out.println("data ="+ file +" accuracy="+ eval.pctCorrect());
+			eval.evaluateModel(cl, newTest);
+			
+			System.out.println("data ="+ file +" accuracy="+ eval.pctCorrect());
 		}}
 //		writer.close();
 	}

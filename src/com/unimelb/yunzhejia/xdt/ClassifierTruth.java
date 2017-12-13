@@ -3,16 +3,12 @@ package com.unimelb.yunzhejia.xdt;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.unimelb.yunzhejia.xdt.cl.M_C45Split;
-import com.unimelb.yunzhejia.xdt.cl.M_ClassifierTree;
-import com.unimelb.yunzhejia.xdt.cl.M_J48;
 import com.yunzhejia.cpxc.util.ClassifierGenerator;
 import com.yunzhejia.cpxc.util.DataUtils;
 
 import weka.classifiers.AbstractClassifier;
+import weka.classifiers.functions.Logistic;
 import weka.classifiers.trees.J48;
-import weka.classifiers.trees.j48.C45Split;
-import weka.classifiers.trees.j48.ClassifierTree;
 import weka.core.Instance;
 import weka.core.Instances;
 
@@ -21,6 +17,9 @@ public class ClassifierTruth {
 		
 		if(cl instanceof J48){
 			return DTTruth.getGoldFeature(cl, instance);
+		}
+		if(cl instanceof Logistic){
+			return LRTruth.getGoldFeature(cl, instance);
 		}
 		
 		double pred = cl.classifyInstance(instance);
