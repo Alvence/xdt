@@ -34,18 +34,19 @@ import java.util.Vector;
 import com.unimelb.yunzhejia.xdt.ClassifierTruth;
 import com.yunzhejia.cpxc.util.ClassifierGenerator.ClassifierType;
 import com.yunzhejia.cpxc.util.DataUtils;
+import com.yunzhejia.cpxc.util.Discretizer;
 import com.yunzhejia.pattern.ICondition;
 import com.yunzhejia.pattern.IPattern;
 import com.yunzhejia.pattern.PatternSet;
+import com.yunzhejia.pattern.patternmining.AprioriPatternMiner;
+import com.yunzhejia.pattern.patternmining.GcGrowthPatternMiner;
 import com.yunzhejia.pattern.patternmining.IPatternMiner;
 import com.yunzhejia.pattern.patternmining.RFPatternMiner;
 
-import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.SingleClassifierEnhancer;
 import weka.classifiers.UpdateableClassifier;
-import weka.classifiers.lazy.LWL;
 import weka.core.Capabilities;
 import weka.core.Capabilities.Capability;
 import weka.core.Instance;
@@ -553,10 +554,11 @@ public class FP_KNN
 	    
 	    m_Train = new Instances(instances, 0, instances.numInstances());
 
-//	    Discretizer discretizer = new Discretizer();
-//		discretizer.initialize(m_Train);
+	    Discretizer discretizer = new Discretizer();
+		discretizer.initialize(m_Train);
 		PatternSet ps;
 		IPatternMiner pm = new RFPatternMiner();
+//		IPatternMiner pm = new GcGrowthPatternMiner(discretizer);
 		ps = pm.minePattern(m_Train, minSupp);
 //		System.out.println("pattern size="+ps.size());
 		ins2patterns = new HashMap<Instance, List<IPattern>>();
@@ -576,7 +578,7 @@ public class FP_KNN
 							newIns.setValue(i, 0);
 						}
 					}
-					if(expls==null || sim(p,expls.get(ins))<0.5){
+					if(expls==null || sim(p,expls.get(ins))>0.5){
 						pattern2ins.get(p).add(newIns);
 					}
 				}
@@ -596,7 +598,7 @@ public class FP_KNN
 		ins2pattern = new HashMap<>();
 		patternSet = new HashSet<>();
 		
-		/*
+		
 		for(Instance ins: m_Train){
 			IPattern p = getPattern(m_Train, ins, ins2patterns.get(ins), expls==null?null:expls.get(ins.getID()));
 			ins2pattern.put(ins, p);
@@ -610,7 +612,7 @@ public class FP_KNN
 			}
 		}
 		
-		*/
+		/**/
 //		System.out.println("pattern size="+pattern2searches.size());
 //	    System.out.println(ins2pattern);
 //	    System.out.println(patternSet);
@@ -627,7 +629,7 @@ public class FP_KNN
   public Set<IPattern> patternSet;
   
   public double minRatio = 4;
-  public double minSupp = 0.1;
+  public double minSupp = 0.05;
   public int k = 4;
   public double beta = 0.5;
   public double delta = 0.1;
@@ -649,10 +651,10 @@ public class FP_KNN
 		  atts.add(cond.getAttrIndex());
 	  }
 	  double jac = union*1.0/atts.size();
-	  return 1-jac;
+	  return jac;
   }
   
-  private IPattern getPattern(Instances data, Instance ins, List<IPattern> ps, List<Integer> expl){
+  private IPattern getPattern(Instances data, Instance ins, List<IPattern> ps, Set<Integer> expl){
 	  if (ps==null || ps.size() == 0){
 		  return null;
 	  }
@@ -956,8 +958,8 @@ public class FP_KNN
 //			System.out.println(newTrain);
 			
 			
-//			FP_KNN cl = new FP_KNN();
-			AbstractClassifier cl = new LWL();
+			FP_KNN cl = new FP_KNN();
+//			AbstractClassifier cl = new LWL();
 //			AbstractClassifier cl = new RandomForest();
 //			AbstractClassifier cl = ClassifierGenerator.getClassifier(type);
 			
@@ -966,8 +968,9 @@ public class FP_KNN
 			
 			Evaluation eval = new Evaluation(test);
 			
-			cl.buildClassifier(train);
-//			cl.buildClassifierWithExpl(train, expls);
+//			cl.buildClassifier(train);
+			cl.buildClassifierWithExpl(train, expls);
+//			cl.buildClassifierWithExpl(train, null);
 			eval.evaluateModel(cl, test);
 			
 			System.out.println("data ="+ file +" accuracy="+ eval.pctCorrect());

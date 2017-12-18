@@ -911,14 +911,14 @@ public class MY_LWL
    */
 	public static void main(String[] args) throws Exception{
 //		String[] files = {/*"adult","anneal",*/"balloon","blood","breast-cancer","diabetes","ILPD","iris","labor","vote","hepatitis","ionosphere"};
-		String[] files = {/*"adult","anneal",*/"blood"};
+		String[] files = {/*"adult","anneal",*/"anneal"};
 //		ClassifierType[] types = {ClassifierType.DECISION_TREE, ClassifierType.LOGISTIC, ClassifierType.NAIVE_BAYES, ClassifierType.RANDOM_FOREST};
 		ClassifierType[] types = {ClassifierType.DECISION_TREE};
 //		PrintWriter writer = new PrintWriter(new File("tmp/stats.txt"));
 		for(String file:files){
 			for(ClassifierType type:types){
-			Instances train = DataUtils.load("data/original/"+file+"_train.arff");
-			Instances test = DataUtils.load("data/original/"+file+"_test.arff");
+			Instances train = DataUtils.load("data/modified/"+file+"_train.arff");
+			Instances test = DataUtils.load("data/modified/"+file+"_test.arff");
 			
 			NominalToBinary filter = new NominalToBinary();
 			filter.setInputFormat(train);  // initializing the filter once with training set
