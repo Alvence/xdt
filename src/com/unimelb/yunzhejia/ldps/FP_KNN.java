@@ -31,20 +31,22 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import com.unimelb.yunzhejia.xdt.ClassifierTruth;
 import com.yunzhejia.cpxc.util.ClassifierGenerator.ClassifierType;
 import com.yunzhejia.cpxc.util.DataUtils;
+import com.yunzhejia.cpxc.util.Discretizer;
 import com.yunzhejia.pattern.ICondition;
 import com.yunzhejia.pattern.IPattern;
 import com.yunzhejia.pattern.PatternSet;
+import com.yunzhejia.pattern.patternmining.AprioriPatternMiner;
+import com.yunzhejia.pattern.patternmining.GcGrowthPatternMiner;
 import com.yunzhejia.pattern.patternmining.IPatternMiner;
 import com.yunzhejia.pattern.patternmining.RFPatternMiner;
 
-import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.SingleClassifierEnhancer;
 import weka.classifiers.UpdateableClassifier;
-import weka.classifiers.trees.RandomForest;
 import weka.core.Capabilities;
 import weka.core.Capabilities.Capability;
 import weka.core.Instance;
@@ -59,9 +61,6 @@ import weka.core.Utils;
 import weka.core.WeightedInstancesHandler;
 import weka.core.neighboursearch.LinearNNSearch;
 import weka.core.neighboursearch.NearestNeighbourSearch;
-import weka.filters.Filter;
-import weka.filters.unsupervised.attribute.NominalToBinary;
-import weka.filters.unsupervised.attribute.Normalize;
 
 /**
  <!-- globalinfo-start -->
@@ -555,10 +554,11 @@ public class FP_KNN
 	    
 	    m_Train = new Instances(instances, 0, instances.numInstances());
 
-//	    Discretizer discretizer = new Discretizer();
-//		discretizer.initialize(m_Train);
+	    Discretizer discretizer = new Discretizer();
+		discretizer.initialize(m_Train);
 		PatternSet ps;
 		IPatternMiner pm = new RFPatternMiner();
+//		IPatternMiner pm = new GcGrowthPatternMiner(discretizer);
 		ps = pm.minePattern(m_Train, minSupp);
 //		System.out.println("pattern size="+ps.size());
 		ins2patterns = new HashMap<Instance, List<IPattern>>();
@@ -578,7 +578,7 @@ public class FP_KNN
 							newIns.setValue(i, 0);
 						}
 					}
-					if(expls==null || sim(p,expls.get(ins))<0.5){
+					if(expls==null || sim(p,expls.get(ins))>0.5){
 						pattern2ins.get(p).add(newIns);
 					}
 				}
@@ -598,7 +598,7 @@ public class FP_KNN
 		ins2pattern = new HashMap<>();
 		patternSet = new HashSet<>();
 		
-		/*
+		
 		for(Instance ins: m_Train){
 			IPattern p = getPattern(m_Train, ins, ins2patterns.get(ins), expls==null?null:expls.get(ins.getID()));
 			ins2pattern.put(ins, p);
@@ -612,7 +612,7 @@ public class FP_KNN
 			}
 		}
 		
-		*/
+		/**/
 //		System.out.println("pattern size="+pattern2searches.size());
 //	    System.out.println(ins2pattern);
 //	    System.out.println(patternSet);
@@ -629,7 +629,7 @@ public class FP_KNN
   public Set<IPattern> patternSet;
   
   public double minRatio = 4;
-  public double minSupp = 0.1;
+  public double minSupp = 0.05;
   public int k = 4;
   public double beta = 0.5;
   public double delta = 0.1;
@@ -651,10 +651,10 @@ public class FP_KNN
 		  atts.add(cond.getAttrIndex());
 	  }
 	  double jac = union*1.0/atts.size();
-	  return 1-jac;
+	  return jac;
   }
   
-  private IPattern getPattern(Instances data, Instance ins, List<IPattern> ps, List<Integer> expl){
+  private IPattern getPattern(Instances data, Instance ins, List<IPattern> ps, Set<Integer> expl){
 	  if (ps==null || ps.size() == 0){
 		  return null;
 	  }
@@ -930,39 +930,48 @@ public class FP_KNN
    * @param argv the options
    */
 	public static void main(String[] args) throws Exception{
-		String[] files = {/*"adult",*/"anneal","balloon","blood","breast-cancer","diabetes","ILPD","iris","labor","vote","hepatitis","ionosphere"};
-//		String[] files = {/*"adult","anneal",*/"iris"};
+//		String[] files = {"adult","anneal","balloon","blood","breast-cancer","chess","crx","diabetes","glass","hepatitis","ILPD","ionosphere"
+//		,"iris","labor","planning","sick","vote"};
+		String[] files = {"anneal","balloon","blood","breast-cancer","chess","crx","diabetes","glass","hepatitis","ionosphere"
+				,"iris","labor","sick","vote"};
+//		String[] files = {"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
+//		String[] files = {"anneal"};
 //		ClassifierType[] types = {ClassifierType.DECISION_TREE, ClassifierType.LOGISTIC, ClassifierType.NAIVE_BAYES, ClassifierType.RANDOM_FOREST};
 		ClassifierType[] types = {ClassifierType.DECISION_TREE};
 //		PrintWriter writer = new PrintWriter(new File("tmp/stats.txt"));
 		for(String file:files){
 			for(ClassifierType type:types){
-			Instances train = DataUtils.load("data/original/"+file+"_train.arff");
-			Instances test = DataUtils.load("data/original/"+file+"_test.arff");
+			Instances train = DataUtils.load("data/modified/"+file+"_train.arff");
+			Instances test = DataUtils.load("data/modified/"+file+"_test.arff");
 			
-			NominalToBinary filter = new NominalToBinary();
-			filter.setInputFormat(train);  // initializing the filter once with training set
-			Instances newTrain = Filter.useFilter(train, filter);  // configures the Filter based on train instances and returns filtered instances
-			Instances newTest = Filter.useFilter(test, filter);    // create new test set
-			
-			
-			Normalize norm = new Normalize();
-			norm.setInputFormat(newTrain);  // initializing the filter once with training set
-			newTrain = Filter.useFilter(newTrain, norm);  // configures the Filter based on train instances and returns filtered instances
-			newTest = Filter.useFilter(newTest, norm);    // create new test set
+//			NominalToBinary filter = new NominalToBinary();
+//			filter.setInputFormat(train);  // initializing the filter once with training set
+//			Instances newTrain = Filter.useFilter(train, filter);  // configures the Filter based on train instances and returns filtered instances
+//			Instances newTest = Filter.useFilter(test, filter);    // create new test set
+//			
+//			
+//			Normalize norm = new Normalize();
+//			norm.setInputFormat(newTrain);  // initializing the filter once with training set
+//			newTrain = Filter.useFilter(newTrain, norm);  // configures the Filter based on train instances and returns filtered instances
+//			newTest = Filter.useFilter(newTest, norm);    // create new test set
+//			System.out.println(newTrain);
 //			System.out.println(newTrain);
 			
 			
-			AbstractClassifier cl = new FP_KNN();
+			FP_KNN cl = new FP_KNN();
 //			AbstractClassifier cl = new LWL();
 //			AbstractClassifier cl = new RandomForest();
 //			AbstractClassifier cl = ClassifierGenerator.getClassifier(type);
 			
+			Map<Long, Set<Integer>> expls = ClassifierTruth.readFromFile("data/modified/expl/"+file+"_train.expl");
 			
-			Evaluation eval = new Evaluation(newTest);
-			cl.buildClassifier(newTrain);
 			
-			eval.evaluateModel(cl, newTest);
+			Evaluation eval = new Evaluation(test);
+			
+//			cl.buildClassifier(train);
+			cl.buildClassifierWithExpl(train, expls);
+//			cl.buildClassifierWithExpl(train, null);
+			eval.evaluateModel(cl, test);
 			
 			System.out.println("data ="+ file +" accuracy="+ eval.pctCorrect());
 		}}

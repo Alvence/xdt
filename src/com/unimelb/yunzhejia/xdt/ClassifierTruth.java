@@ -1,6 +1,13 @@
 package com.unimelb.yunzhejia.xdt;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.yunzhejia.cpxc.util.ClassifierGenerator;
@@ -45,10 +52,32 @@ public class ClassifierTruth {
 		return expl;
 	}
 	
-	
-	
-public static void main(String[] args) {
+	public static Map<Long, Set<Integer>> readFromFile(String file) throws Exception{
+		Map<Long, Set<Integer>> ret = new HashMap<>();
 		
+		BufferedReader reader = new BufferedReader(new FileReader(new File(file)));
+		String line = null;
+		while((line = reader.readLine())!=null){
+			String[] e = line.split(",");
+			Long id = Long.parseLong(e[0].trim());
+			Set<Integer> ex = new HashSet<>();
+			for(int i = 1; i < e.length; i++){
+				ex.add(Integer.parseInt(e[i].trim()));
+			}
+//			System.out.println(Arrays.toString(e));
+//			System.out.println(id+"       "+ex);
+			ret.put(id, ex);
+		}
+		reader.close();
+		
+		return ret;
+	}
+	
+	
+	
+public static void main(String[] args) throws Exception {
+	readFromFile("data/modified/expl/adult_train.expl");
+	/*
 		try {
 			Instances train = DataUtils.load("data/original/blood_train.arff");
 			Instances test = DataUtils.load("data/original/blood_test.arff");
@@ -68,6 +97,6 @@ public static void main(String[] args) {
 			e.printStackTrace();
 		}
 		
-
+*/
 	}
 }
