@@ -1,15 +1,20 @@
 package com.unimelb.yunzhejia.patternpartition;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.yunzhejia.cpxc.util.ClassifierGenerator;
 import com.yunzhejia.cpxc.util.ClassifierGenerator.ClassifierType;
 import com.yunzhejia.cpxc.util.DataUtils;
+import com.yunzhejia.pattern.IPattern;
 import com.yunzhejia.pattern.PatternSet;
+import com.yunzhejia.pattern.patternmining.IPatternMiner;
+import com.yunzhejia.pattern.patternmining.RFPatternMiner;
 
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Evaluation;
+import weka.classifiers.functions.LinearRegression;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.Utils;
@@ -17,8 +22,12 @@ import weka.core.Utils;
 public class PattternPartitionLinear extends AbstractClassifier {
 
 	Instances train;
-	int K = 10;
-	Map<Integer, PatternSet> patterns;
+	
+	PatternSet patterns;
+	
+	Map<IPattern, double[]> A;
+	
+	
 	double minSupp = 0.1;
 	double minRatio = 3;
 	int defaultClass=-1;
@@ -31,26 +40,57 @@ public class PattternPartitionLinear extends AbstractClassifier {
 	}
 	
 	public void buildClassifierWithExpl(Instances instances, Map<Long, Set<Integer>> expls) throws Exception {
-		
-		
+		 instances = new Instances(instances);
+		 instances.deleteWithMissingClass();
+		 
+		 IPatternMiner pm = new RFPatternMiner();
+//			IPatternMiner pm = new GcGrowthPatternMiner(discretizer);
+		 patterns = pm.minePattern(instances, minSupp);
+		 
+		 //initialize A
+		 for(IPattern p:patterns){
+			 Instances mds = p.matchingDataSet(instances);
+			 LinearRegression lr = new LinearRegression();
+			 lr.buildClassifier(mds);
+			 A.put(p, lr.coefficients());
+		 }
+		 
+		 //iteration
+		 for(int t = 1; t < 20; t++){
+			 double temp = 0;
+			 double[] coe = new double[instances.numAttributes()];
+			 for(int d = 0; d < coe.length; d++){
+					coe[d] = 0;
+					for(IPattern p : patterns){
+						coe[d] += A.get(p)[d]; 
+					}
+				}
+			 
+			 for (Instance ins: instances){
+				 double pred = 0;
+				 for(int d = 0; d < coe.length; d++){
+					 pred+= coe[d] * (d == ins.numAttributes()-1? 1:ins.value(d));
+				 }
+				 temp += 2 * (ins.classValue() - pred);
+			 }
+			 
+			 
+		 }
 	}
 	
 	@Override
-	public double[] distributionForInstance(Instance instance)throws Exception{
+	public double classifyInstance(Instance instance) throws Exception {
+		double[] coe = new double[instance.numAttributes()];
+		double result = 0;
+		for(int d = 0; d < coe.length; d++){
+			coe[d] = 0;
+			for(IPattern p : patterns){
+				coe[d] += A.get(p)[d]; 
+			}
+			result+= coe[d] * (d == instance.numAttributes()-1? 1:instance.value(d));
+		}
 		
-		double[] probs = new double[train.numClasses()];
-		
-		Utils.normalize(probs);
-		
-		return probs;
-		/*
-		Instances nei = findNearest(instance, K, train);
-		
-		AbstractClassifier cl = new J48();
-		cl.buildClassifier(nei);
-	
-		
-		return cl.distributionForInstance(instance);*/
+		return result;
 	}
 /*
 	private Instances findNearest(Instance instance, int k, Instances headerInfo) {

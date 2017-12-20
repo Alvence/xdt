@@ -14,10 +14,10 @@ import weka.core.Instances;
 
 public class DTTruthGeneration {
 	public static void main(String[] args) throws Exception{
-//		String[] files = {"adult","anneal","balloon","blood","breast-cancer","chess","crx","diabetes","glass","hepatitis","ILPD","ionosphere"
-//				,"iris","labor","planning","sick","vote"};
+		String[] files = {"adult","anneal","balloon","blood","breast-cancer","chess","crx","diabetes","glass","hepatitis","ILPD","ionosphere"
+				,"iris","labor","planning","sick","vote"};
 //		String[] files = {/*"adult",*/"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
-		String[] files = {"ILPD"};
+//		String[] files = {"ILPD"};
 		Random rand = new Random(1);
 		for(String file:files){
 			
@@ -25,7 +25,6 @@ public class DTTruthGeneration {
 			Instances test = DataUtils.load("data/norm/"+file+"_test.arff");
 			AbstractClassifier cl = ClassifierGenerator.getClassifier(ClassifierGenerator.ClassifierType.DECISION_TREE);
 			cl.buildClassifier(train);
-			System.out.println(cl);
 			PrintStream printer = new PrintStream(new File("data/modified/expl/"+file+"_train.expl"));
 			for(Instance ins:train){
 				if(Math.random()<1){

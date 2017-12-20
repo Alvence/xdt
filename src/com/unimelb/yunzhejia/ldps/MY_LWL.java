@@ -911,7 +911,7 @@ public class MY_LWL
    */
 	public static void main(String[] args) throws Exception{
 //		String[] files = {/*"adult","anneal",*/"balloon","blood","breast-cancer","diabetes","ILPD","iris","labor","vote","hepatitis","ionosphere"};
-		String[] files = {/*"adult","anneal",*/"anneal"};
+		String[] files = {/*"adult","anneal",*/"blood"};
 //		ClassifierType[] types = {ClassifierType.DECISION_TREE, ClassifierType.LOGISTIC, ClassifierType.NAIVE_BAYES, ClassifierType.RANDOM_FOREST};
 		ClassifierType[] types = {ClassifierType.DECISION_TREE};
 //		PrintWriter writer = new PrintWriter(new File("tmp/stats.txt"));
