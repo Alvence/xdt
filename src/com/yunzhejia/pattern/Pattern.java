@@ -199,7 +199,7 @@ public class Pattern implements IPattern {
 //		cond.addAll(conditions);
 //		cond.addAll(p.getConditions());
 //		return new Pattern(cond);
-		Set<ICondition> cond = new HashSet<>();
+		/*Set<ICondition> cond = new HashSet<>();
 		Set<ICondition> newC = new HashSet<>();
 		for(ICondition c:conditions){
 			cond.add(c.copy());
@@ -239,11 +239,12 @@ public class Pattern implements IPattern {
 		}
 		Pattern pattern = new Pattern();
 		pattern.conditions = newC;
-		return pattern;
+		return pattern;*/
+		return null;
 	}
 	@Override
 	public IPattern disjuction(IPattern p) {
-		Set<ICondition> cond = new HashSet<>();
+		/*Set<ICondition> cond = new HashSet<>();
 		Set<ICondition> newC = new HashSet<>();
 		for(ICondition c:conditions){
 			cond.add(c.copy());
@@ -281,7 +282,8 @@ public class Pattern implements IPattern {
 		cond.addAll(newC);
 		Pattern pattern = new Pattern();
 		pattern.conditions = cond;
-		return pattern;
+		return pattern;*/
+		return null;
 	}
 	@Override
 	public boolean subset(IPattern p) {

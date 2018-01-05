@@ -12,6 +12,7 @@ import com.yunzhejia.cpxc.util.DataUtils;
 import com.yunzhejia.pattern.IPattern;
 import com.yunzhejia.pattern.PatternSet;
 import com.yunzhejia.pattern.patternmining.IPatternMiner;
+import com.yunzhejia.pattern.patternmining.ManualPatternMiner;
 import com.yunzhejia.pattern.patternmining.RFPatternMiner;
 
 import weka.classifiers.AbstractClassifier;
@@ -20,7 +21,7 @@ import weka.classifiers.functions.LinearRegression;
 import weka.core.Instance;
 import weka.core.Instances;
 
-public class PattternPartitionLinear extends AbstractClassifier {
+public class PartitionWiseLinearModels extends AbstractClassifier {
 
 	Instances train;
 	
@@ -35,6 +36,11 @@ public class PattternPartitionLinear extends AbstractClassifier {
 	
 	double stepSize = 0.1;
 	double beta = 0.5;
+	
+	double lambdaP = 0.001;
+	double lambda0 = 0.001; 
+	
+	int T = 30;
 	@Override
 	public void buildClassifier(Instances data) throws Exception {
 		buildClassifierWithExpl(data,null);
@@ -43,43 +49,62 @@ public class PattternPartitionLinear extends AbstractClassifier {
 	public void buildClassifierWithExpl(Instances instances, Map<Long, Set<Integer>> expls) throws Exception {
 		 instances = new Instances(instances);
 		 instances.deleteWithMissingClass();
-		 
-		 IPatternMiner pm = new RFPatternMiner();
+		 IPatternMiner pm = new ManualPatternMiner();
+//		 IPatternMiner pm = new RFPatternMiner();
 //			IPatternMiner pm = new GcGrowthPatternMiner(discretizer);
 		 patterns = pm.minePattern(instances, minSupp);
 		 
+//		 System.out.println(patterns);
+//		 System.out.println(patterns.get(0).matchingDataSet(instances));
+//		 System.out.println(patterns.get(1).matchingDataSet(instances));
+//		 System.out.println(patterns.get(2).matchingDataSet(instances));
+//		 if(true)
+//		 return;
 		 //initialize A
 		 A = new HashMap<>();
 		 for(IPattern p:patterns){
-//			 Instances mds = p.matchingDataSet(instances);
+			 Instances mds = p.matchingDataSet(instances);
 //			 LinearRegression lr = new LinearRegression();
 //			 lr.buildClassifier(mds);
 //			 A.put(p, lr.coefficients());
-			 A.put(p, new double[instances.numAttributes()]);
+			 double[] iniCoe = new double[instances.numAttributes()];
+			 for(int i = 0; i < iniCoe.length; i++){
+				 iniCoe[i]=(int)(Math.random()*10+1);
+			 }
+			 A.put(p, iniCoe);
 		 }
 		 
 		 //iteration
-		 for(int t = 1; t < 200; t++){
+		 for(int t = 1; t < T ; t++){
 			 System.out.println("t="+t);
 			 showStat();
 			 
-			double[] temp = new double[instances.numInstances()];
-			double[] coe = new double[instances.numAttributes()];
-			for(int d = 0; d < coe.length; d++){
-				coe[d] = 0;
-				for(IPattern p : patterns){
-					coe[d] += A.get(p)[d]; 
-				}
-			}
+			double[] errs = new double[instances.numInstances()];
+			
 			 
 			 for (int i = 0; i < instances.numInstances();i++){
 				 Instance ins = instances.get(i);
+				 //calculate errors
+				 double[] coe = new double[instances.numAttributes()];
+				 for(int d = 0; d < coe.length; d++){
+						coe[d] = 0;
+						for(IPattern p : patterns){
+							if(p.match(ins)){
+								coe[d] += A.get(p)[d];
+							}
+						}
+				 }
+				 
+				
+				 
 				 double pred = 0;
 				 for(int d = 0; d < coe.length; d++){
 					 pred+= coe[d] * (d == ins.numAttributes()-1? 1:ins.value(d));
 				 }
-				 temp[i] = 2 * (ins.classValue() - pred);
+				 errs[i] = (ins.classValue() - pred);
 			 }
+			 
+			 System.out.println("errors:  "+Arrays.toString(errs));
 			 
 			 Map<IPattern, double[]> At = new HashMap<>();
 			 
@@ -89,42 +114,20 @@ public class PattternPartitionLinear extends AbstractClassifier {
 					 double der = 0;
 					 for (int i = 0; i < instances.numInstances();i++){
 						 Instance ins = instances.get(i);
-						  der += temp[i] * (-1) *(p.match(ins)?1:0)*(d == ins.numAttributes()-1? 1:ins.value(d));
+						  der += errs[i]  *(p.match(ins)?1:0)*(d == ins.numAttributes()-1? 1:ins.value(d));
 					 }
-					 der = der/instances.numInstances();
+//					 der = der/instances.numInstances();
 					 coet[d] = A.get(p)[d] - stepSize*der;
+					 
+					 
+//					 coet[d] = (coet[d]>0?1:-1)*(Math.abs(coet[d]) - stepSize*lambdaP);
+					 
+//					 coet[d] = (coet[d]>0?1:-1)* (Math.abs(coet[d] - stepSize*lambda0)>0? Math.abs(coet[d] - stepSize*lambda0):0 );
 				 }
 				 At.put(p, coet);
 			 }
 			
-			double[] coet2 = new double[instances.numAttributes()];
-			for(int d = 0; d < coet2.length; d++){
-				coet2[d] = 0;
-				for(IPattern p : patterns){
-					coet2[d] += At.get(p)[d]; 
-				}
-			}
 			
-			if(expls!=null){
-				for (Instance ins: instances){
-					if(!expls.containsKey(ins.getID())){
-						continue;
-					}
-					Set<Integer> expl = expls.get(ins.getID());
-					if(expl == null){
-						continue;
-					}
-					for(IPattern p : patterns){
-						for(int d = 0; d < coet2.length - 1; d++){
-							if(expl.contains(d) && Math.abs(coet2[d])< 1e-7){
-								At.get(p)[d] = At.get(p)[d] - beta* At.get(p)[d]/2; 
-							}else if(!expl.contains(d) && Math.abs(coet2[d])>1e-7){
-								At.get(p)[d] = At.get(p)[d] - beta* coet2[d] /2;
-							}
-						}
-					}
-				}
-			}
 			A = At;
 		 }
 	}
@@ -147,7 +150,7 @@ public class PattternPartitionLinear extends AbstractClassifier {
 			result+= coe[d] * (d == instance.numAttributes()-1? 1:instance.value(d));
 		}
 		
-		return result;
+		return result>0.5?1:0;
 	}
 /*
 	private Instances findNearest(Instance instance, int k, Instances headerInfo) {
@@ -190,12 +193,14 @@ public class PattternPartitionLinear extends AbstractClassifier {
 //		PrintWriter writer = new PrintWriter(new File("tmp/stats.txt"));
 		for(String file:files){
 			for(ClassifierType type:types){
-			Instances train = DataUtils.load("data/modified/"+file+"_train.arff");
-			Instances test = DataUtils.load("data/modified/"+file+"_test.arff");
+//			Instances train = DataUtils.load("data/modified/"+file+"_train.arff");
+//			Instances test = DataUtils.load("data/modified/"+file+"_test.arff");
+			Instances train = DataUtils.load("data/"+"synthetic_10samples.arff");
+			Instances test = DataUtils.load("data/"+"synthetic_10samples.arff");
 			
 			Map<Long, Set<Integer>> expls = ClassifierTruth.readFromFile("data/modified/expl/"+file+"_train.expl");
 			
-			PattternPartitionLinear cl = new PattternPartitionLinear();
+			PartitionWiseLinearModels cl = new PartitionWiseLinearModels();
 			
 			Evaluation eval = new Evaluation(test);
 			
