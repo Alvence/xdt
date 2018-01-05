@@ -40,7 +40,7 @@ public class PartitionWiseLinearModels extends AbstractClassifier {
 	double lambdaP = 0.001;
 	double lambda0 = 0.001; 
 	
-	int T = 30;
+	int T = 3000;
 	@Override
 	public void buildClassifier(Instances data) throws Exception {
 		buildClassifierWithExpl(data,null);
@@ -63,13 +63,14 @@ public class PartitionWiseLinearModels extends AbstractClassifier {
 		 //initialize A
 		 A = new HashMap<>();
 		 for(IPattern p:patterns){
-			 Instances mds = p.matchingDataSet(instances);
+//			 Instances mds = p.matchingDataSet(instances);
 //			 LinearRegression lr = new LinearRegression();
 //			 lr.buildClassifier(mds);
 //			 A.put(p, lr.coefficients());
 			 double[] iniCoe = new double[instances.numAttributes()];
 			 for(int i = 0; i < iniCoe.length; i++){
-				 iniCoe[i]=(int)(Math.random()*10+1);
+//				 iniCoe[i]=(int)(Math.random()*10+1);
+				 iniCoe[i]=Math.random();
 			 }
 			 A.put(p, iniCoe);
 		 }
@@ -79,7 +80,7 @@ public class PartitionWiseLinearModels extends AbstractClassifier {
 			 System.out.println("t="+t);
 			 showStat();
 			 
-			double[] errs = new double[instances.numInstances()];
+			double[] preds = new double[instances.numInstances()];
 			
 			 
 			 for (int i = 0; i < instances.numInstances();i++){
@@ -101,10 +102,10 @@ public class PartitionWiseLinearModels extends AbstractClassifier {
 				 for(int d = 0; d < coe.length; d++){
 					 pred+= coe[d] * (d == ins.numAttributes()-1? 1:ins.value(d));
 				 }
-				 errs[i] = (ins.classValue() - pred);
+				 preds[i] = pred;
 			 }
 			 
-			 System.out.println("errors:  "+Arrays.toString(errs));
+			 System.out.println("preds:  "+Arrays.toString(preds));
 			 
 			 Map<IPattern, double[]> At = new HashMap<>();
 			 
@@ -114,9 +115,11 @@ public class PartitionWiseLinearModels extends AbstractClassifier {
 					 double der = 0;
 					 for (int i = 0; i < instances.numInstances();i++){
 						 Instance ins = instances.get(i);
-						  der += errs[i]  *(p.match(ins)?1:0)*(d == ins.numAttributes()-1? 1:ins.value(d));
+						 double y = ins.classValue();
+						 der += (-1)*(y-(1/(1+Math.exp(-1*preds[i]))))  *(p.match(ins)?1:0)*(d == ins.numAttributes()-1? 1:ins.value(d));
 					 }
 //					 der = der/instances.numInstances();
+//					 System.out.println(der);
 					 coet[d] = A.get(p)[d] - stepSize*der;
 					 
 					 
@@ -145,12 +148,14 @@ public class PartitionWiseLinearModels extends AbstractClassifier {
 		for(int d = 0; d < coe.length; d++){
 			coe[d] = 0;
 			for(IPattern p : patterns){
-				coe[d] += A.get(p)[d]; 
+				if(p.match(instance)){
+					coe[d] += A.get(p)[d];
+				}
 			}
 			result+= coe[d] * (d == instance.numAttributes()-1? 1:instance.value(d));
 		}
 		
-		return result>0.5?1:0;
+		return result>0?1:0;
 	}
 /*
 	private Instances findNearest(Instance instance, int k, Instances headerInfo) {
