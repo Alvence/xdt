@@ -33,7 +33,7 @@ public class PartitionWiseLinearModels extends AbstractClassifier {
 	double minRatio = 3;
 	int defaultClass=-1;
 	
-	double stepSize = 0.01;
+	double stepSize = 0.1;
 	double beta = 0.5;
 	
 	double lambdaP = 0.001;
