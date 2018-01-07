@@ -16,7 +16,7 @@ import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 
 public class ParallelCoordinatesMiner implements IPatternMiner, Serializable{
-	private int NUMERIC_BIN_WIDTH = 10;
+	private int NUMERIC_BIN_WIDTH = 6;
 	
 	public ParallelCoordinatesMiner(){
 		this(10);
