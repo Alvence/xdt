@@ -38,7 +38,7 @@ public class ManualPatternMiner implements IPatternMiner {
 		
 		ps.add(p1);
 		ps.add(p2);
-		ps.add(p3);
+//		ps.add(p3);
 		return ps;
 	}
 

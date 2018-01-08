@@ -2,6 +2,7 @@ package com.yunzhejia.pattern.patternmining;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class ParallelCoordinatesMiner implements IPatternMiner, Serializable{
 	private int NUMERIC_BIN_WIDTH = 6;
 	
 	public ParallelCoordinatesMiner(){
-		this(10);
+		this(6);
 	}
 	
 	public ParallelCoordinatesMiner(int num_bin){
@@ -38,9 +39,38 @@ public class ParallelCoordinatesMiner implements IPatternMiner, Serializable{
 			}
 			String attrName = data.attribute(i).name();
 			if (data.attribute(i).isNumeric()){
+				//calculate quantile
+				List<Double> values = new ArrayList<>();
+				for(Instance ins:data){
+					values.add(ins.value(i));
+				}
+				Collections.sort(values);
+				int step = values.size()/NUMERIC_BIN_WIDTH;
+				for(int index = step; index<values.size();index+=step){
+					double left;
+					double right;
+					if(index == step){
+						left = Double.MIN_VALUE;
+					}else{
+						left = values.get(index-step);
+					}
+					
+					if(index+step>=values.size()){
+						right = Double.MAX_VALUE;
+					}else{
+						right = values.get(index+step);
+					}
+					
+					IPattern pattern = new Pattern(new NumericCondition(attrName,i, left, right));
+					if (pattern.support(data)>= minSupp){
+						ps.add(pattern);
+					}
+				}
+				
+				
 //				double lower = data.attribute(i).getLowerNumericBound();
 //				double upper = data.attribute(i).getUpperNumericBound();
-				double lower = mins.get(i);
+		/*		double lower = mins.get(i);
 				double upper = maxs.get(i);
 				double width = (upper-lower)/NUMERIC_BIN_WIDTH;
 				double left = Double.MIN_VALUE;
@@ -55,7 +85,7 @@ public class ParallelCoordinatesMiner implements IPatternMiner, Serializable{
 					}
 					left = right;
 					right = right + width;
-				}
+				}*/
 			}else{
 				Enumeration<Object> values = data.attribute(i).enumerateValues();
 				while(values.hasMoreElements()){

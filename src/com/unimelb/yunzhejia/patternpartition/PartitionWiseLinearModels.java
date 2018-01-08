@@ -19,6 +19,10 @@ import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Evaluation;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.NominalToBinary;
+import weka.filters.unsupervised.attribute.RemoveUseless;
+import weka.filters.unsupervised.attribute.ReplaceMissingValues;
 
 public class PartitionWiseLinearModels extends AbstractClassifier {
 
@@ -29,7 +33,7 @@ public class PartitionWiseLinearModels extends AbstractClassifier {
 	Map<IPattern, double[]> A;
 	
 	
-	double minSupp = 0.1;
+	double minSupp = 0.2;
 	double minRatio = 3;
 	int defaultClass=-1;
 	
@@ -38,18 +42,36 @@ public class PartitionWiseLinearModels extends AbstractClassifier {
 	
 	double lambdaP = 0.001;
 	double lambda0 = 0.01; 
-	
+	/** The filter used to make attributes numeric. */
+	private NominalToBinary m_NominalToBinary;
+
+	  /** The filter used to get rid of missing values. */
+	private ReplaceMissingValues m_ReplaceMissingValues;
 	Random rand = new Random(0);
 	
-	int T = 10000;
+	int T = 3000;
 	@Override
 	public void buildClassifier(Instances data) throws Exception {
 		buildClassifierWithExpl(data,null);
 	}
 	
-	public void buildClassifierWithExpl(Instances instances, Map<Long, Set<Integer>> expls) throws Exception {
-		 instances = new Instances(instances);
+	public void buildClassifierWithExpl(Instances train, Map<Long, Set<Integer>> expls) throws Exception {
+		 Instances instances = new Instances(train);
 		 instances.deleteWithMissingClass();
+		 
+		// Replace missing values
+		 m_ReplaceMissingValues = new ReplaceMissingValues();
+		 m_ReplaceMissingValues.setInputFormat(instances);
+		 instances = Filter.useFilter(instances, m_ReplaceMissingValues);
+
+		
+
+		 // Transform attributes
+		 m_NominalToBinary = new NominalToBinary();
+		 m_NominalToBinary.setInputFormat(instances);
+		 instances = Filter.useFilter(instances, m_NominalToBinary);
+		 
+		 
 //		 IPatternMiner pm = new ManualPatternMiner();
 //		 IPatternMiner pm = new RFPatternMiner();
 		 IPatternMiner pm = new ParallelCoordinatesMiner();
@@ -86,8 +108,8 @@ public class PartitionWiseLinearModels extends AbstractClassifier {
 		 
 		 //iteration
 		 for(int t = 1; t < T ; t++){
-			 System.out.println("t="+t);
-			 showStat();
+//			 System.out.println("t="+t);
+//			 showStat();
 			 
 			double[] preds = new double[instances.numInstances()];
 			
@@ -121,8 +143,10 @@ public class PartitionWiseLinearModels extends AbstractClassifier {
 			 double acc = correct*1.0/instances.numInstances();
 			 objs[obj_index%10] = acc;
 			 obj_index++;
+			 
+			 //terminate condition
 			 if(terminate(objs)){
-				 break;
+				 break; 
 			 }
 			 
 //			 System.out.println("preds:  "+Arrays.toString(preds));
@@ -132,6 +156,34 @@ public class PartitionWiseLinearModels extends AbstractClassifier {
 			 
 			 for(IPattern p : patterns){
 				 double[] coet = new double[instances.numAttributes()];
+				 
+				 double[] coe_current = new double[instances.numAttributes()];
+				 for(int k = 0; k < coe_current.length; k++){
+					 coe_current[k] = A.get(p)[k];
+				 }
+				//M1 optimization
+				 double theta = 0.0;
+				 double total = 0.0;
+				 int count = 0;
+				 Arrays.sort(coe_current);
+				 for(int i = coe_current.length-1; i>=0; i--){
+					 double pivot = coe_current[i];
+					 double sum = 0;
+					 for(int j= coe_current.length-1; j > i; j--){
+						 sum+= (Math.abs(coe_current[j])-Math.abs(coe_current[i]));
+					 }
+					 if(sum < lambdaP){
+						 count++;;
+						 total+= Math.abs(pivot);
+					 }else{
+						 break;
+					 }
+				 }
+				 theta = (total-lambdaP)/count;
+				 theta = (theta>0? theta:0);
+				 
+				 
+				 
 				 for(int d = 0; d < coet.length; d++){
 					 double der = 0;
 					 for (int i = 0; i < instances.numInstances();i++){
@@ -144,9 +196,13 @@ public class PartitionWiseLinearModels extends AbstractClassifier {
 					 coet[d] = A.get(p)[d] - stepSize*der;
 					 
 					 
-					 coet[d] = (coet[d]>0?1:-1)*(Math.abs(coet[d]) - stepSize*lambdaP);
+					 
+					 if(! (p instanceof MatchAllPattern)){
+						 coet[d] = (coet[d]>0?1:-1)*Math.min(Math.abs(coet[d]),theta);
+					 }
 					 coet[d] = (coet[d]>0?1:-1)* (Math.abs(coet[d] - stepSize*lambda0)>0? Math.abs(coet[d] - stepSize*lambda0):0 );
 					 
+//					 coet[d] = (coet[d]<1e-4?0:coet[d]);
 				 }
 				 At.put(p, coet);
 			 }
@@ -174,6 +230,11 @@ public class PartitionWiseLinearModels extends AbstractClassifier {
 	
 	@Override
 	public double classifyInstance(Instance instance) throws Exception {
+		m_ReplaceMissingValues.input(instance);
+	    instance = m_ReplaceMissingValues.output();
+	    m_NominalToBinary.input(instance);
+	    instance = m_NominalToBinary.output();
+		
 		double[] coe = new double[instance.numAttributes()];
 		double result = 0;
 		for(int d = 0; d < coe.length; d++){
@@ -220,18 +281,18 @@ public class PartitionWiseLinearModels extends AbstractClassifier {
 	}
 	*/
 	public static void main(String[] args) throws Exception{
-//		String[] files = {"anneal","balloon","blood","breast-cancer","chess","crx","diabetes","glass","hepatitis","ionosphere", "labor","sick","vote"};
+		String[] files = {"anneal","balloon","blood","breast-cancer","chess","crx","diabetes","glass","hepatitis","ionosphere", "labor","sick","vote"};
 //		String[] files = {"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
-		String[] files = {"anneal"};
+//		String[] files = {"vote"};
 		
 		ClassifierType[] types = {ClassifierType.DECISION_TREE};
 //		PrintWriter writer = new PrintWriter(new File("tmp/stats.txt"));
 		for(String file:files){
 			for(ClassifierType type:types){
-//			Instances train = DataUtils.load("data/original/"+file+"_train.arff");
-//			Instances test = DataUtils.load("data/original/"+file+"_test.arff");
-			Instances train = DataUtils.load("data/"+"synthetic_10samples.arff");
-			Instances test = DataUtils.load("data/"+"synthetic_10samples.arff");
+			Instances train = DataUtils.load("data/norm/"+file+"_train.arff");
+			Instances test = DataUtils.load("data/norm/"+file+"_test.arff");
+//			Instances train = DataUtils.load("data/"+"synthetic_10samples.arff");
+//			Instances test = DataUtils.load("data/"+"synthetic_10samples.arff");
 			
 			Map<Long, Set<Integer>> expls = ClassifierTruth.readFromFile("data/modified/expl/"+file+"_train.expl");
 			
