@@ -1,0 +1,33 @@
+@relation labor-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
+
+@attribute duration numeric
+@attribute wage-increase-first-year numeric
+@attribute wage-increase-second-year numeric
+@attribute wage-increase-third-year numeric
+@attribute cost-of-living-adjustment {none,tcf,tc}
+@attribute working-hours numeric
+@attribute pension {none,ret_allw,empl_contr}
+@attribute standby-pay numeric
+@attribute shift-differential numeric
+@attribute education-allowance {yes,no}
+@attribute statutory-holidays numeric
+@attribute vacation {below_average,average,generous}
+@attribute longterm-disability-assistance {yes,no}
+@attribute contribution-to-dental-plan {none,half,full}
+@attribute bereavement-assistance {yes,no}
+@attribute contribution-to-health-plan {none,half,full}
+@attribute class {bad,good}
+
+@data
+0.5,0,0.2,?,none,0.846154,empl_contr,?,?,yes,0.5,generous,yes,none,yes,full,bad
+1,0.5,0.5,0.967742,?,1,?,?,?,?,0.5,average,?,half,yes,half,good
+1,0,0.2,?,tcf,?,empl_contr,?,?,yes,?,?,yes,half,yes,?,bad
+1,0.4,0.3,?,none,1,empl_contr,?,0.208333,?,0.333333,average,yes,full,?,full,good
+0,0,?,?,tc,1,ret_allw,0.181818,-0.041667,no,0.333333,generous,no,none,no,none,bad
+1,0,0,0,none,1,none,?,?,?,0.166667,below_average,?,half,yes,full,bad
+0,0.16,?,?,none,0.846154,empl_contr,0,0.083333,no,0,below_average,yes,half,?,none,bad
+1,0.6,0.48,?,none,0.846154,empl_contr,0.727273,0.208333,?,0.333333,generous,yes,?,?,full,good
+0.5,0.5,0.76,?,?,0.615385,ret_allw,?,?,yes,0.333333,below_average,?,full,?,full,good
+0,0.4,?,?,none,?,none,?,?,yes,0.333333,average,no,none,no,none,good
+0.5,0.6,0.5,?,none,0.846154,?,1.090909,0.166667,?,0.333333,below_average,yes,?,?,full,good
+0.5,0.46,0.48,?,?,0.846154,?,?,0.125,?,0.5,generous,?,full,?,full,good

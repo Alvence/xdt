@@ -41,6 +41,7 @@ public class NumericCondition implements ICondition {
 	 */
 	@Override
 	public boolean match(Instance ins) {
+//		System.out.println(this);
 		double insVal = ins.value(attrIndex);
 //		if(insVal<=right && insVal > left){
 //			return true;

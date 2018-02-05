@@ -6,14 +6,13 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import com.unimelb.yunzhejia.xdt.ClassifierTruth;
 import com.yunzhejia.cpxc.util.ClassifierGenerator.ClassifierType;
 import com.yunzhejia.cpxc.util.DataUtils;
 import com.yunzhejia.pattern.IPattern;
 import com.yunzhejia.pattern.MatchAllPattern;
 import com.yunzhejia.pattern.PatternSet;
 import com.yunzhejia.pattern.patternmining.IPatternMiner;
-import com.yunzhejia.pattern.patternmining.ParallelCoordinatesMiner;
+import com.yunzhejia.pattern.patternmining.RFPatternMiner;
 
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Evaluation;
@@ -21,7 +20,6 @@ import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.NominalToBinary;
-import weka.filters.unsupervised.attribute.RemoveUseless;
 import weka.filters.unsupervised.attribute.ReplaceMissingValues;
 
 public class PartitionWiseLinearModels extends AbstractClassifier {
@@ -73,8 +71,8 @@ public class PartitionWiseLinearModels extends AbstractClassifier {
 		 
 		 
 //		 IPatternMiner pm = new ManualPatternMiner();
-//		 IPatternMiner pm = new RFPatternMiner();
-		 IPatternMiner pm = new ParallelCoordinatesMiner();
+		 IPatternMiner pm = new RFPatternMiner();
+//		 IPatternMiner pm = new ParallelCoordinatesMiner();
 //		 IPatternMiner pm = new GcGrowthPatternMiner(discretizer);
 		 patterns = pm.minePattern(instances, minSupp);
 
@@ -281,7 +279,9 @@ public class PartitionWiseLinearModels extends AbstractClassifier {
 	}
 	*/
 	public static void main(String[] args) throws Exception{
-		String[] files = {"anneal","balloon","blood","breast-cancer","chess","crx","diabetes","glass","hepatitis","ionosphere", "labor","sick","vote"};
+		String[] files = {/*"adult",*/"balloon","blood","breast-cancer","chess","crx","diabetes","hepatitis","ILPD","ionosphere",
+				"labor","planning","sick","vote"};
+//		String[] files = {"anneal","balloon","blood","breast-cancer",/*"chess",*/"crx","diabetes","glass","hepatitis","ionosphere", "labor","sick","vote"};
 //		String[] files = {"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
 //		String[] files = {"vote"};
 		
@@ -289,12 +289,12 @@ public class PartitionWiseLinearModels extends AbstractClassifier {
 //		PrintWriter writer = new PrintWriter(new File("tmp/stats.txt"));
 		for(String file:files){
 			for(ClassifierType type:types){
-			Instances train = DataUtils.load("data/norm/"+file+"_train.arff");
-			Instances test = DataUtils.load("data/norm/"+file+"_test.arff");
+			Instances train = DataUtils.load("data/modified/"+file+"_train.arff");
+			Instances test = DataUtils.load("data/modified/"+file+"_test.arff");
 //			Instances train = DataUtils.load("data/"+"synthetic_10samples.arff");
 //			Instances test = DataUtils.load("data/"+"synthetic_10samples.arff");
 			
-			Map<Long, Set<Integer>> expls = ClassifierTruth.readFromFile("data/modified/expl/"+file+"_train.expl");
+//			Map<Long, Set<Integer>> expls = ClassifierTruth.readFromFile("data/modified/expl/"+file+"_train.expl");
 			
 			PartitionWiseLinearModels cl = new PartitionWiseLinearModels();
 //			AbstractClassifier cl = ClassifierGenerator.getClassifier(type);
