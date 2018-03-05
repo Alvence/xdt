@@ -1,0 +1,15 @@
+@relation mushroom-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
+
+@attribute color {YELLOW,PURPLE}
+@attribute size {LARGE,SMALL}
+@attribute act {STRETCH,DIP}
+@attribute age {ADULT,CHILD}
+@attribute NewNumeric0 numeric
+@attribute NewNumeric1 numeric
+@attribute class {T,F}
+
+@data
+YELLOW,LARGE,STRETCH,ADULT,0.663632,0.222013,T
+YELLOW,SMALL,STRETCH,ADULT,0.444352,0.73675,T
+PURPLE,LARGE,STRETCH,ADULT,0.302709,0.751569,T
+PURPLE,LARGE,STRETCH,CHILD,0.123833,0.925255,F

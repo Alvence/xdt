@@ -1,0 +1,77 @@
+@relation breast-cancer-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
+
+@attribute age {10-19,20-29,30-39,40-49,50-59,60-69,70-79,80-89,90-99}
+@attribute menopause {lt40,ge40,premeno}
+@attribute tumor-size {0-4,5-9,10-14,15-19,20-24,25-29,30-34,35-39,40-44,45-49,50-54,55-59}
+@attribute inv-nodes {0-2,3-5,6-8,9-11,12-14,15-17,18-20,21-23,24-26,27-29,30-32,33-35,36-39}
+@attribute node-caps {yes,no}
+@attribute deg-malig {1,2,3}
+@attribute breast {left,right}
+@attribute breast-quad {left_up,left_low,right_up,right_low,central}
+@attribute irradiat {yes,no}
+@attribute NewNumeric0 numeric
+@attribute NewNumeric1 numeric
+@attribute NewNumeric2 numeric
+@attribute NewNumeric3 numeric
+@attribute NewNumeric4 numeric
+@attribute Class {no-recurrence-events,recurrence-events}
+
+@data
+40-49,premeno,25-29,0-2,no,2,right,left_low,no,0.77591,0.892949,0.629838,0.837379,0.328648,no-recurrence-events
+30-39,premeno,5-9,0-2,no,2,left,right_low,no,0.396957,0.979401,0.605154,0.088266,0.803061,no-recurrence-events
+50-59,ge40,0-4,0-2,no,1,right,central,no,0.754437,0.007564,0.161868,0.605288,0.198002,no-recurrence-events
+40-49,premeno,35-39,0-2,yes,3,right,left_up,yes,0.525256,0.94017,0.095326,0.283236,0.503854,no-recurrence-events
+50-59,premeno,15-19,0-2,no,2,left,left_low,no,0.555111,0.306524,0.928334,0.930031,0.967746,recurrence-events
+40-49,premeno,30-34,0-2,no,3,left,left_up,no,0.729616,0.062009,0.6735,0.896045,0.883707,no-recurrence-events
+50-59,ge40,10-14,0-2,no,2,right,left_low,no,0.897539,0.715315,0.962244,0.452971,0.275761,no-recurrence-events
+40-49,premeno,40-44,0-2,no,1,right,left_up,no,0.869613,0.65662,0.401389,0.472264,0.524771,no-recurrence-events
+50-59,ge40,20-24,0-2,no,2,right,central,no,0.212018,0.326433,0.478461,0.387356,0.463273,recurrence-events
+50-59,ge40,25-29,0-2,no,2,left,left_low,no,0.620628,0.949369,0.137268,0.647298,0.082353,no-recurrence-events
+30-39,premeno,40-44,0-2,no,1,left,left_up,no,0.209361,0.870455,0.569166,0.12822,0.014489,recurrence-events
+50-59,ge40,15-19,0-2,no,1,right,central,no,0.199004,0.737962,0.240015,0.919351,0.55181,no-recurrence-events
+40-49,premeno,20-24,0-2,no,2,left,left_low,no,0.270834,0.378508,0.774072,0.64488,0.813239,recurrence-events
+60-69,ge40,20-24,3-5,no,2,left,left_low,yes,0.62591,0.528449,0.75638,0.522018,0.569151,recurrence-events
+40-49,premeno,20-24,0-2,no,2,right,left_up,no,0.578613,0.402543,0.039421,0.850801,0.262284,no-recurrence-events
+40-49,ge40,25-29,12-14,yes,3,left,right_low,yes,0.714296,0.809218,0.662623,0.029555,0.184836,recurrence-events
+50-59,ge40,40-44,6-8,yes,3,left,left_low,yes,0.567589,0.168281,0.464949,0.168419,0.168004,recurrence-events
+40-49,premeno,35-39,9-11,yes,2,right,right_up,yes,0.145606,0.638172,0.366788,0.213671,0.486725,no-recurrence-events
+50-59,premeno,10-14,0-2,no,2,right,left_up,no,0.381185,0.420776,0.282464,0.412737,0.042843,no-recurrence-events
+60-69,ge40,25-29,3-5,no,2,right,right_up,no,0.884944,0.285574,0.847692,0.545779,0.895055,recurrence-events
+50-59,premeno,50-54,9-11,yes,2,right,left_up,no,0.952695,0.559232,0.280697,0.27912,0.109506,recurrence-events
+40-49,premeno,20-24,0-2,no,2,left,central,no,0.449772,0.096931,0.742695,0.07673,0.937773,no-recurrence-events
+50-59,lt40,20-24,0-2,?,1,left,left_up,no,0.395589,0.287062,0.59677,0.525536,0.18422,recurrence-events
+40-49,ge40,25-29,0-2,no,2,left,left_low,no,0.898124,0.209062,0.395557,0.841308,0.382648,no-recurrence-events
+60-69,ge40,35-39,6-8,yes,3,left,left_low,no,0.998029,0.281419,0.533576,0.040634,0.792048,recurrence-events
+40-49,ge40,40-44,15-17,yes,2,right,left_up,yes,0.803594,0.101257,0.350863,0.432138,0.062789,no-recurrence-events
+70-79,ge40,0-4,0-2,no,1,left,right_low,no,0.095891,0.935755,0.073823,0.55573,0.236303,no-recurrence-events
+50-59,ge40,30-34,0-2,no,1,right,central,no,0.417395,0.915756,0.310956,0.612607,0.9098,no-recurrence-events
+40-49,premeno,30-34,0-2,no,1,left,left_low,yes,0.902928,0.687103,0.675362,0.725293,0.958353,recurrence-events
+50-59,premeno,25-29,0-2,no,2,left,right_up,no,0.929751,0.901904,0.948916,0.327128,0.194494,recurrence-events
+40-49,premeno,20-24,3-5,no,2,right,left_low,no,0.354852,0.709872,0.019187,0.61727,0.825928,no-recurrence-events
+40-49,premeno,35-39,0-2,no,2,right,right_up,no,0.496368,0.481258,0.756599,0.896224,0.875488,no-recurrence-events
+60-69,ge40,15-19,0-2,no,1,left,right_low,no,0.665521,0.259179,0.802356,0.537312,0.060396,no-recurrence-events
+50-59,premeno,25-29,0-2,no,2,left,right_up,no,0.019095,0.191962,0.875096,0.621,0.142979,recurrence-events
+50-59,ge40,35-39,0-2,no,3,left,left_up,no,0.477742,0.863475,0.724666,0.29107,0.330068,no-recurrence-events
+40-49,premeno,35-39,9-11,yes,2,right,left_up,yes,0.607138,0.936213,0.447172,0.174503,0.606453,no-recurrence-events
+50-59,ge40,50-54,0-2,no,1,right,right_up,no,0.739152,0.098785,0.202771,0.963386,0.21163,no-recurrence-events
+30-39,premeno,10-14,0-2,no,2,left,right_low,no,0.005774,0.451172,0.803672,0.624923,0.264165,no-recurrence-events
+60-69,ge40,5-9,0-2,no,1,left,central,no,0.156196,0.291041,0.391402,0.575001,0.260169,no-recurrence-events
+60-69,ge40,25-29,0-2,no,2,left,left_low,no,0.888728,0.068769,0.870583,0.456831,0.077976,no-recurrence-events
+30-39,premeno,40-44,0-2,no,2,right,right_up,no,0.828241,0.17018,0.022232,0.344735,0.475496,no-recurrence-events
+40-49,ge40,30-34,0-2,no,2,left,left_up,yes,0.859018,0.581418,0.698201,0.661509,0.094094,no-recurrence-events
+30-39,premeno,30-34,0-2,no,2,left,left_up,no,0.381705,0.987015,0.750795,0.031898,0.044687,no-recurrence-events
+60-69,ge40,40-44,3-5,yes,3,right,left_low,no,0.897553,0.237359,0.371872,0.626504,0.048656,recurrence-events
+50-59,ge40,30-34,9-11,?,3,left,left_low,yes,0.193697,0.664016,0.885796,0.019471,0.054708,no-recurrence-events
+50-59,premeno,50-54,0-2,yes,2,right,left_up,yes,0.21118,0.540484,0.684118,0.828856,0.992666,no-recurrence-events
+30-39,lt40,15-19,0-2,no,3,right,left_up,no,0.589761,0.212408,0.958499,0.498642,0.972061,no-recurrence-events
+70-79,ge40,15-19,9-11,?,1,left,left_low,yes,0.349944,0.004868,0.515107,0.027847,0.895077,recurrence-events
+60-69,ge40,30-34,0-2,no,3,right,left_up,yes,0.835145,0.454376,0.858839,0.670365,0.286628,recurrence-events
+40-49,ge40,20-24,0-2,no,3,left,left_up,no,0.740309,0.334427,0.582619,0.953969,0.432861,no-recurrence-events
+40-49,premeno,15-19,0-2,no,2,left,left_up,no,0.318378,0.350124,0.646262,0.146146,0.912805,recurrence-events
+40-49,premeno,25-29,0-2,no,2,right,left_low,no,0.585986,0.574197,0.049705,0.234051,0.265308,recurrence-events
+30-39,premeno,20-24,0-2,no,2,left,right_low,no,0.195458,0.270443,0.454365,0.330401,0.972088,no-recurrence-events
+50-59,premeno,30-34,0-2,no,3,right,left_up,yes,0.355352,0.663547,0.899579,0.201872,0.29508,recurrence-events
+60-69,ge40,30-34,0-2,no,3,left,left_low,no,0.458665,0.966902,0.607248,0.138079,0.077092,no-recurrence-events
+60-69,ge40,15-19,0-2,no,3,right,left_up,yes,0.754477,0.955428,0.250009,0.183246,0.534421,no-recurrence-events
+30-39,premeno,20-24,0-2,no,3,left,left_up,yes,0.592745,0.880463,0.50074,0.847201,0.468365,recurrence-events
+40-49,premeno,25-29,0-2,no,2,left,left_up,yes,0.393254,0.732711,0.146231,0.06947,0.781146,no-recurrence-events

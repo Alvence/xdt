@@ -1,0 +1,41 @@
+@relation labor-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
+
+@attribute duration numeric
+@attribute wage-increase-first-year numeric
+@attribute wage-increase-second-year numeric
+@attribute wage-increase-third-year numeric
+@attribute cost-of-living-adjustment {none,tcf,tc}
+@attribute working-hours numeric
+@attribute pension {none,ret_allw,empl_contr}
+@attribute standby-pay numeric
+@attribute shift-differential numeric
+@attribute education-allowance {yes,no}
+@attribute statutory-holidays numeric
+@attribute vacation {below_average,average,generous}
+@attribute longterm-disability-assistance {yes,no}
+@attribute contribution-to-dental-plan {none,half,full}
+@attribute bereavement-assistance {yes,no}
+@attribute contribution-to-health-plan {none,half,full}
+@attribute NewNumeric0 numeric
+@attribute NewNumeric1 numeric
+@attribute NewNumeric2 numeric
+@attribute NewNumeric3 numeric
+@attribute NewNumeric4 numeric
+@attribute NewNumeric5 numeric
+@attribute NewNumeric6 numeric
+@attribute NewNumeric7 numeric
+@attribute class {bad,good}
+
+@data
+0.5,0,0.2,?,none,0.846154,empl_contr,?,?,yes,0.5,generous,yes,none,yes,full,0.328861,0.524621,0.113947,0.958793,0.301699,0.038731,0.71627,0.367576,bad
+1,0.5,0.5,0.967742,?,1,?,?,?,?,0.5,average,?,half,yes,half,0.937823,0.344728,0.405668,0.860076,0.073,0.892671,0.664573,0.158918,good
+1,0,0.2,?,tcf,?,empl_contr,?,?,yes,?,?,yes,half,yes,?,0.516742,0.213842,0.53296,0.974151,0.945303,0.407033,0.076636,0.625427,good
+1,0.4,0.3,?,none,1,empl_contr,?,0.208333,?,0.333333,average,yes,full,?,full,0.037456,0.423565,0.318539,0.998563,0.074422,0.233376,0.811233,0.361982,good
+0,0,?,?,tc,1,ret_allw,0.181818,-0.041667,no,0.333333,generous,no,none,no,none,0.864186,0.631227,0.293337,0.132352,0.54039,0.864613,0.796509,0.249333,bad
+1,0,0,0,none,1,none,?,?,?,0.166667,below_average,?,half,yes,full,0.332926,0.431213,0.133116,0.285978,0.136647,0.039432,0.36634,0.33941,bad
+0,0.16,?,?,none,0.846154,empl_contr,0,0.083333,no,0,below_average,yes,half,?,none,0.308675,0.259116,0.833663,0.455116,0.9867,0.344783,0.591144,0.925986,bad
+1,0.6,0.48,?,none,0.846154,empl_contr,0.727273,0.208333,?,0.333333,generous,yes,?,?,full,0.958794,0.335735,0.050361,0.652865,0.601501,0.098445,0.403913,0.570244,good
+0.5,0.5,0.76,?,?,0.615385,ret_allw,?,?,yes,0.333333,below_average,?,full,?,full,0.230775,0.607974,0.277899,0.044904,0.240851,0.843728,0.572256,0.100763,good
+0,0.4,?,?,none,?,none,?,?,yes,0.333333,average,no,none,no,none,0.77269,0.893646,0.795923,0.182117,0.692103,0.038315,0.817235,0.857469,bad
+0.5,0.6,0.5,?,none,0.846154,?,1.090909,0.166667,?,0.333333,below_average,yes,?,?,full,0.284615,0.68724,0.556386,0.475217,0.829433,0.769295,0.629763,0.699068,good
+0.5,0.46,0.48,?,?,0.846154,?,?,0.125,?,0.5,generous,?,full,?,full,0.539304,0.333658,0.438405,0.305915,0.56698,0.57641,0.585364,0.543503,good
