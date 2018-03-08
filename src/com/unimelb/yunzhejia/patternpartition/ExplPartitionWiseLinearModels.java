@@ -46,10 +46,10 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 	double lambdaP = 0.001;
 	double lambda0 = 0.01; 
 	/** The filter used to make attributes numeric. */
-	private NominalToBinary m_NominalToBinary;
+	public NominalToBinary m_NominalToBinary;
 
 	  /** The filter used to get rid of missing values. */
-	private ReplaceMissingValues m_ReplaceMissingValues;
+	public ReplaceMissingValues m_ReplaceMissingValues;
 	Random rand = new Random(0);
 	
 	int T = 3000;
@@ -361,7 +361,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 //			cl.buildClassifierWithExpl(train, expls);
 			cl.buildClassifierWithExpl(pm, train, flag?expls:null);
 			eval.evaluateModel(cl, test);
-			double losX = evalExpl(cl,test,explsTest);
+			double losX = ExplEvaluation.evalExpl(cl,test,explsTest);
 			
 			System.out.println("data ="+ file +"pm="+pm+" flag="+flag+" accuracy="+ eval.pctCorrect()+"  losExpl="+losX);
 			}}}
