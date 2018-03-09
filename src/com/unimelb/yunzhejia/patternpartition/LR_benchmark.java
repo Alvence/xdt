@@ -4,13 +4,15 @@ import java.util.Map;
 import java.util.Set;
 
 import com.unimelb.yunzhejia.xdt.ClassifierTruth;
-import com.yunzhejia.cpxc.util.DataUtils;
 import com.yunzhejia.cpxc.util.ClassifierGenerator.ClassifierType;
+import com.yunzhejia.cpxc.util.DataUtils;
 import com.yunzhejia.pattern.patternmining.IPatternMiner;
 import com.yunzhejia.pattern.patternmining.ParallelCoordinatesMiner;
 import com.yunzhejia.pattern.patternmining.RFPatternMiner;
 
 import weka.classifiers.Evaluation;
+import weka.classifiers.functions.Logistic;
+import weka.core.Debug.Log;
 import weka.core.Instances;
 
 public class LR_benchmark {
@@ -23,7 +25,7 @@ String[] files = {"balloon","blood","diabetes","hepatitis", "labor", "vote","crx
 
 ClassifierType[] types = {ClassifierType.DECISION_TREE};
 IPatternMiner[] pms = {new RFPatternMiner(), new ParallelCoordinatesMiner()};
-boolean[] flags = { true, false};
+boolean[] flags = {true, false};
 //PrintWriter writer = new PrintWriter(new File("tmp/stats.txt"));
 for(String file:files){
 	for(ClassifierType type:types){
@@ -36,14 +38,15 @@ for(String file:files){
 	
 	Map<Long, Set<Integer>> expls = ClassifierTruth.readFromFile("data/modified/expl/"+file+"_train.expl");
 	Map<Long, Set<Integer>> explsTest = ClassifierTruth.readFromFile("data/modified/expl/"+file+"_test.expl");
-	ExplPartitionWiseLinearModels cl = new ExplPartitionWiseLinearModels();
+//	ExplPartitionWiseLinearModels cl = new ExplPartitionWiseLinearModels();
 //	AbstractClassifier cl = ClassifierGenerator.getClassifier(type);
+	Logistic cl = new Logistic();
 	
 	Evaluation eval = new Evaluation(test);
 	
-//	cl.buildClassifier(train);
+	cl.buildClassifier(train);
 //	cl.buildClassifierWithExpl(train, expls);
-	cl.buildClassifierWithExpl(pm, train, flag?expls:null);
+//	cl.buildClassifierWithExpl(pm, train, flag?expls:null);
 	eval.evaluateModel(cl, test);
 	double losX = evalExpl(cl,test,explsTest);
 	
@@ -52,7 +55,7 @@ for(String file:files){
 }
 	}
 
-	private static double evalExpl(ExplPartitionWiseLinearModels cl, Instances test,
+	private static double evalExpl(Logistic cl, Instances test,
 			Map<Long, Set<Integer>> explsTest) {
 		// TODO Auto-generated method stub
 		return 0;
