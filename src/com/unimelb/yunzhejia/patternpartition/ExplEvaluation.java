@@ -43,4 +43,12 @@ public class ExplEvaluation {
 		
 		return ret/data.numInstances();
 	}
+	
+	
+	public static double precisionExpl(Map<Long, Set<Integer>> expls, Map<Long, Set<Integer>> trueExpls){
+		 for(Long id:trueExpls.keySet()){
+			 Set<Integer> trueExpl = trueExpls.get(id);
+		 }
+		 return 0;
+	}
 }
