@@ -1,4 +1,4 @@
-@relation train-weka.filters.unsupervised.attribute.NumericToNominal-R52-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
+@relation train-weka.filters.unsupervised.attribute.NumericToNominal-R52-weka.filters.unsupervised.attribute.NominalToBinary-Rfirst-last-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
 
 @attribute var_0=b numeric
 @attribute var_0=a numeric

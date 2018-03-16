@@ -1,4 +1,4 @@
-@relation planning-weka.filters.unsupervised.attribute.NumericToNominal-R13-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
+@relation planning-weka.filters.unsupervised.attribute.NumericToNominal-R13-weka.filters.unsupervised.attribute.NominalToBinary-Rfirst-last-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
 
 @attribute '  Delta' numeric
 @attribute ' Theta' numeric

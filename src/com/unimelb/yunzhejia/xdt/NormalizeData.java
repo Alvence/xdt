@@ -4,6 +4,7 @@ import com.yunzhejia.cpxc.util.DataUtils;
 
 import weka.core.Instances;
 import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.NominalToBinary;
 import weka.filters.unsupervised.attribute.Normalize;
 
 public class NormalizeData {
@@ -18,11 +19,17 @@ public class NormalizeData {
 			
 			Instances dataset = new Instances(train);
 			dataset.addAll(test);
+			NominalToBinary ntb = new NominalToBinary();
+			ntb.setInputFormat(dataset);
+			Instances binaryTrain = Filter.useFilter(train, ntb);
+			Instances binaryTest = Filter.useFilter(test, ntb);
 			
+			Instances binaryDataset = new Instances(binaryTrain);
+			binaryDataset.addAll(binaryTest);
 			Normalize norm = new Normalize();
-			norm.setInputFormat(dataset);  // initializing the filter once with training set
-			Instances newTrain = Filter.useFilter(train, norm);  // configures the Filter based on train instances and returns filtered instances
-			Instances newTest = Filter.useFilter(test, norm);    // create new test set
+			norm.setInputFormat(binaryDataset);  // initializing the filter once with training set
+			Instances newTrain = Filter.useFilter(binaryTrain, norm);  // configures the Filter based on train instances and returns filtered instances
+			Instances newTest = Filter.useFilter(binaryTest, norm);    // create new test set
 			
 			DataUtils.save(newTrain, "data/norm/"+file+"_train.arff");
 			DataUtils.save(newTest, "data/norm/"+file+"_test.arff");

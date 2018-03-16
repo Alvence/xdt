@@ -96,28 +96,28 @@ public class PrincipalComponents extends Filter implements OptionHandler,
   private static final long serialVersionUID = -5649876869480249303L;
 
   /** The data to transform analyse/transform. */
-  protected Instances m_TrainInstances;
+  public Instances m_TrainInstances;
 
   /** Keep a copy for the class attribute (if set). */
-  protected Instances m_TrainCopy;
+  public Instances m_TrainCopy;
 
   /** The header for the transformed data format. */
-  protected Instances m_TransformedFormat;
+  public Instances m_TransformedFormat;
 
   /** Data has a class set. */
-  protected boolean m_HasClass;
+  public boolean m_HasClass;
 
   /** Class index. */
-  protected int m_ClassIndex;
+  public int m_ClassIndex;
 
   /** Number of attributes. */
-  protected int m_NumAttribs;
+  public int m_NumAttribs;
 
   /** Number of instances. */
-  protected int m_NumInstances;
+  public int m_NumInstances;
 
   /** Correlation matrix for the original data. */
-  protected UpperSymmDenseMatrix m_Correlation;
+  public UpperSymmDenseMatrix m_Correlation;
 
   /**
    * If true, center (rather than standardize) the data and compute PCA from
@@ -129,46 +129,46 @@ public class PrincipalComponents extends Filter implements OptionHandler,
    * Will hold the unordered linear transformations of the (normalized) original
    * data.
    */
-  protected double[][] m_Eigenvectors;
+  public double[][] m_Eigenvectors;
 
   /** Eigenvalues for the corresponding eigenvectors. */
-  protected double[] m_Eigenvalues = null;
+  public double[] m_Eigenvalues = null;
 
   /** Sorted eigenvalues. */
-  protected int[] m_SortedEigens;
+  public int[] m_SortedEigens;
 
   /** sum of the eigenvalues. */
-  protected double m_SumOfEigenValues = 0.0;
+  public double m_SumOfEigenValues = 0.0;
 
   /** Filters for replacing missing values. */
-  protected ReplaceMissingValues m_ReplaceMissingFilter;
+  public ReplaceMissingValues m_ReplaceMissingFilter;
 
   /** Filter for turning nominal values into numeric ones. */
-  protected NominalToBinary m_NominalToBinaryFilter;
+  public NominalToBinary m_NominalToBinaryFilter;
 
   /** Filter for removing class attribute, nominal attributes with 0 or 1 value. */
-  protected Remove m_AttributeFilter;
+  public Remove m_AttributeFilter;
 
   /** Filter for standardizing the data */
-  protected Standardize m_standardizeFilter;
+  public Standardize m_standardizeFilter;
 
   /** Filter for centering the data */
-  protected Center m_centerFilter;
+  public Center m_centerFilter;
 
   /** The number of attributes in the pc transformed data. */
-  protected int m_OutputNumAtts = -1;
+  public int m_OutputNumAtts = -1;
 
   /**
    * the amount of varaince to cover in the original data when retaining the
    * best n PC's.
    */
-  protected double m_CoverVariance = 0.95;
+  public double m_CoverVariance = 0.95;
 
   /** maximum number of attributes in the transformed attribute name. */
-  protected int m_MaxAttrsInName = 5;
+  public int m_MaxAttrsInName = 5;
 
   /** maximum number of attributes in the transformed data (-1 for all). */
-  protected int m_MaxAttributes = -1;
+  public int m_MaxAttributes = -1;
 
   /**
    * Returns a string describing this filter.
@@ -468,7 +468,7 @@ public class PrincipalComponents extends Filter implements OptionHandler,
    * @throws Exception in case the determination goes wrong
    * @see #batchFinished()
    */
-  protected Instances determineOutputFormat(Instances inputFormat)
+  public Instances determineOutputFormat(Instances inputFormat)
     throws Exception {
     double cumulative;
     ArrayList<Attribute> attributes;
@@ -555,7 +555,7 @@ public class PrincipalComponents extends Filter implements OptionHandler,
     return outputFormat;
   }
 
-  protected void fillCovariance() throws Exception {
+  public void fillCovariance() throws Exception {
 
 
     // just center the data or standardize it?
@@ -593,7 +593,7 @@ public class PrincipalComponents extends Filter implements OptionHandler,
    * @return a transformed instance
    * @throws Exception if instance can't be transformed
    */
-  protected Instance convertInstance(Instance instance) throws Exception {
+  public Instance convertInstance(Instance instance) throws Exception {
     Instance result;
     double[] newVals;
     Instance tempInst;
@@ -674,7 +674,7 @@ public class PrincipalComponents extends Filter implements OptionHandler,
    * @throws Exception in case the processing goes wrong
    * @see #batchFinished()
    */
-  protected void setup(Instances instances) throws Exception {
+  public void setup(Instances instances) throws Exception {
     int i;
     int j;
     Vector<Integer> deleteCols;

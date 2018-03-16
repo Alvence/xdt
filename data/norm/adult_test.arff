@@ -1,4 +1,4 @@
-@relation train-weka.filters.unsupervised.attribute.NumericToNominal-R105-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
+@relation train-weka.filters.unsupervised.attribute.NumericToNominal-R105-weka.filters.unsupervised.attribute.NominalToBinary-Rfirst-last-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
 
 @attribute var_0 numeric
 @attribute var_1=State-gov numeric

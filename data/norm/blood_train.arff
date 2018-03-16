@@ -1,4 +1,4 @@
-@relation blood-weka.filters.unsupervised.attribute.Discretize-B10-M-1.0-R5-weka.filters.unsupervised.attribute.Discretize-B2-M-1.0-R5-weka.filters.unsupervised.attribute.NumericToNominal-R5-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
+@relation blood-weka.filters.unsupervised.attribute.Discretize-B10-M-1.0-R5-weka.filters.unsupervised.attribute.Discretize-B2-M-1.0-R5-weka.filters.unsupervised.attribute.NumericToNominal-R5-weka.filters.unsupervised.attribute.NominalToBinary-Rfirst-last-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
 
 @attribute 'Recency (months)' numeric
 @attribute 'Frequency (times)' numeric

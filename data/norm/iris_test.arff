@@ -1,4 +1,4 @@
-@relation iris-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
+@relation iris-weka.filters.unsupervised.attribute.NominalToBinary-Rfirst-last-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
 
 @attribute sepallength numeric
 @attribute sepalwidth numeric

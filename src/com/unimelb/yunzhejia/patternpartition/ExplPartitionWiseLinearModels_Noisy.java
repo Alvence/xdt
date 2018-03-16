@@ -1,29 +1,17 @@
 package com.unimelb.yunzhejia.patternpartition;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 import com.unimelb.yunzhejia.xdt.ClassifierTruth;
 import com.yunzhejia.cpxc.util.ClassifierGenerator.ClassifierType;
 import com.yunzhejia.cpxc.util.DataUtils;
-import com.yunzhejia.pattern.IPattern;
-import com.yunzhejia.pattern.MatchAllPattern;
-import com.yunzhejia.pattern.PatternSet;
 import com.yunzhejia.pattern.patternmining.IPatternMiner;
-import com.yunzhejia.pattern.patternmining.ParallelCoordinatesMiner;
 import com.yunzhejia.pattern.patternmining.RFPatternMiner;
 
-import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Evaluation;
-import weka.core.Instance;
+import weka.classifiers.functions.Logistic;
 import weka.core.Instances;
-import weka.core.Utils;
-import weka.filters.Filter;
-import weka.filters.unsupervised.attribute.NominalToBinary;
-import weka.filters.unsupervised.attribute.ReplaceMissingValues;
 
 public class ExplPartitionWiseLinearModels_Noisy{
 	
@@ -32,11 +20,11 @@ public class ExplPartitionWiseLinearModels_Noisy{
 //				"labor","sick","vote"};
 //		String[] files = {"anneal","balloon","blood","breast-cancer",/*"chess",*/"crx","diabetes","glass","hepatitis","ionosphere", "labor","sick","vote"};
 //		String[] files = {"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
-		String[] files = {"balloon","blood","diabetes","hepatitis", "labor", "vote"};
+		String[] files = {"balloon","blood","crx","diabetes","hepatitis", "labor", "vote"};
 		
 		ClassifierType[] types = {ClassifierType.DECISION_TREE};
 		IPatternMiner[] pms = {new RFPatternMiner()};
-		boolean[] flags = {false,true};
+		boolean[] flags = {true};
 		int[] rands={50};
 //		PrintWriter writer = new PrintWriter(new File("tmp/stats.txt"));
 		for(String file:files){
@@ -53,6 +41,7 @@ public class ExplPartitionWiseLinearModels_Noisy{
 			Map<Long, Set<Integer>> explsTest = ClassifierTruth.readFromFile("data/noisy"+rand+"/expl/"+file+"_test.expl");
 			ExplPartitionWiseLinearModels cl = new ExplPartitionWiseLinearModels();
 //			AbstractClassifier cl = ClassifierGenerator.getClassifier(type);
+//			Logistic cl = new Logistic();
 			
 			Evaluation eval = new Evaluation(test);
 			

@@ -1,4 +1,4 @@
-@relation ionosphere-weka.filters.unsupervised.attribute.Remove-R2-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
+@relation ionosphere-weka.filters.unsupervised.attribute.Remove-R2-weka.filters.unsupervised.attribute.NominalToBinary-Rfirst-last-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
 
 @attribute att1 numeric
 @attribute att3 numeric

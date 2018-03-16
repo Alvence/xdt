@@ -21,7 +21,7 @@ public class LR_benchmark {
 //		"labor","sick","vote"};
 //String[] files = {"anneal","balloon","blood","breast-cancer",/*"chess",*/"crx","diabetes","glass","hepatitis","ionosphere", "labor","sick","vote"};
 //String[] files = {"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
-String[] files = {"balloon","blood","diabetes","hepatitis", "labor", "vote","crx","sick"};
+String[] files = {"balloon","blood","crx","diabetes","hepatitis", "labor","sick", "vote"};
 
 //PrintWriter writer = new PrintWriter(new File("tmp/stats.txt"));
 for(String file:files){

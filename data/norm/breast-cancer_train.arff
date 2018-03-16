@@ -1,242 +1,281 @@
-@relation breast-cancer-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
+@relation breast-cancer-weka.filters.unsupervised.attribute.NominalToBinary-Rfirst-last-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
 
-@attribute age {10-19,20-29,30-39,40-49,50-59,60-69,70-79,80-89,90-99}
-@attribute menopause {lt40,ge40,premeno}
-@attribute tumor-size {0-4,5-9,10-14,15-19,20-24,25-29,30-34,35-39,40-44,45-49,50-54,55-59}
-@attribute inv-nodes {0-2,3-5,6-8,9-11,12-14,15-17,18-20,21-23,24-26,27-29,30-32,33-35,36-39}
-@attribute node-caps {yes,no}
-@attribute deg-malig {1,2,3}
-@attribute breast {left,right}
-@attribute breast-quad {left_up,left_low,right_up,right_low,central}
-@attribute irradiat {yes,no}
+@attribute age=10-19 numeric
+@attribute age=20-29 numeric
+@attribute age=30-39 numeric
+@attribute age=40-49 numeric
+@attribute age=50-59 numeric
+@attribute age=60-69 numeric
+@attribute age=70-79 numeric
+@attribute age=80-89 numeric
+@attribute age=90-99 numeric
+@attribute menopause=lt40 numeric
+@attribute menopause=ge40 numeric
+@attribute menopause=premeno numeric
+@attribute tumor-size=0-4 numeric
+@attribute tumor-size=5-9 numeric
+@attribute tumor-size=10-14 numeric
+@attribute tumor-size=15-19 numeric
+@attribute tumor-size=20-24 numeric
+@attribute tumor-size=25-29 numeric
+@attribute tumor-size=30-34 numeric
+@attribute tumor-size=35-39 numeric
+@attribute tumor-size=40-44 numeric
+@attribute tumor-size=45-49 numeric
+@attribute tumor-size=50-54 numeric
+@attribute tumor-size=55-59 numeric
+@attribute inv-nodes=0-2 numeric
+@attribute inv-nodes=3-5 numeric
+@attribute inv-nodes=6-8 numeric
+@attribute inv-nodes=9-11 numeric
+@attribute inv-nodes=12-14 numeric
+@attribute inv-nodes=15-17 numeric
+@attribute inv-nodes=18-20 numeric
+@attribute inv-nodes=21-23 numeric
+@attribute inv-nodes=24-26 numeric
+@attribute inv-nodes=27-29 numeric
+@attribute inv-nodes=30-32 numeric
+@attribute inv-nodes=33-35 numeric
+@attribute inv-nodes=36-39 numeric
+@attribute node-caps=no numeric
+@attribute deg-malig=1 numeric
+@attribute deg-malig=2 numeric
+@attribute deg-malig=3 numeric
+@attribute breast=right numeric
+@attribute breast-quad=left_up numeric
+@attribute breast-quad=left_low numeric
+@attribute breast-quad=right_up numeric
+@attribute breast-quad=right_low numeric
+@attribute breast-quad=central numeric
+@attribute irradiat=no numeric
 @attribute Class {no-recurrence-events,recurrence-events}
 
 @data
-60-69,ge40,50-54,0-2,no,3,right,left_up,no,recurrence-events
-40-49,premeno,30-34,15-17,yes,3,left,left_low,no,recurrence-events
-60-69,ge40,10-14,0-2,no,1,left,left_up,no,no-recurrence-events
-30-39,premeno,35-39,9-11,yes,3,left,left_low,no,recurrence-events
-60-69,ge40,30-34,0-2,yes,2,right,right_up,yes,recurrence-events
-50-59,ge40,20-24,0-2,no,2,right,left_up,no,no-recurrence-events
-50-59,ge40,15-19,0-2,yes,2,left,central,yes,no-recurrence-events
-30-39,premeno,30-34,0-2,no,2,left,left_up,no,recurrence-events
-50-59,ge40,20-24,0-2,yes,2,right,left_up,no,no-recurrence-events
-60-69,ge40,25-29,3-5,?,1,right,left_low,yes,no-recurrence-events
-50-59,premeno,30-34,0-2,no,1,left,central,no,no-recurrence-events
-40-49,premeno,10-14,0-2,no,1,right,right_low,no,no-recurrence-events
-40-49,premeno,50-54,0-2,no,2,right,left_low,yes,recurrence-events
-50-59,ge40,10-14,0-2,no,1,left,left_up,no,no-recurrence-events
-60-69,ge40,30-34,0-2,no,2,left,left_low,no,no-recurrence-events
-40-49,ge40,20-24,0-2,no,3,left,left_low,no,no-recurrence-events
-40-49,premeno,10-14,0-2,no,2,left,left_low,yes,no-recurrence-events
-50-59,premeno,15-19,0-2,no,2,right,right_low,no,no-recurrence-events
-60-69,ge40,10-14,0-2,no,1,right,left_low,no,no-recurrence-events
-20-29,premeno,35-39,0-2,no,2,right,right_up,no,no-recurrence-events
-60-69,ge40,15-19,0-2,no,2,left,left_low,no,no-recurrence-events
-40-49,premeno,20-24,0-2,no,2,right,left_up,no,no-recurrence-events
-60-69,ge40,50-54,0-2,no,2,left,left_low,no,no-recurrence-events
-50-59,premeno,25-29,0-2,no,1,right,left_up,no,recurrence-events
-40-49,premeno,15-19,0-2,yes,3,right,left_up,no,recurrence-events
-60-69,ge40,40-44,3-5,no,2,right,left_up,yes,no-recurrence-events
-60-69,ge40,30-34,0-2,no,1,left,left_up,no,no-recurrence-events
-50-59,premeno,30-34,0-2,no,3,left,left_low,no,no-recurrence-events
-60-69,ge40,10-14,6-8,yes,3,left,left_up,yes,recurrence-events
-40-49,premeno,30-34,0-2,no,2,left,right_low,no,no-recurrence-events
-50-59,ge40,0-4,0-2,no,2,left,central,no,no-recurrence-events
-50-59,premeno,25-29,0-2,no,3,right,left_low,yes,recurrence-events
-50-59,premeno,25-29,0-2,no,1,right,left_up,no,no-recurrence-events
-40-49,premeno,15-19,12-14,no,3,right,right_low,yes,no-recurrence-events
-50-59,premeno,20-24,0-2,no,1,left,left_low,no,no-recurrence-events
-40-49,premeno,25-29,0-2,no,2,right,left_low,no,recurrence-events
-50-59,premeno,25-29,0-2,no,2,left,left_low,no,no-recurrence-events
-30-39,premeno,15-19,6-8,yes,3,left,left_low,yes,recurrence-events
-50-59,ge40,15-19,0-2,no,2,right,left_low,no,no-recurrence-events
-50-59,ge40,40-44,6-8,yes,3,left,left_low,yes,recurrence-events
-70-79,ge40,40-44,0-2,no,1,right,left_up,no,no-recurrence-events
-40-49,premeno,35-39,0-2,no,1,left,left_low,no,no-recurrence-events
-40-49,premeno,25-29,0-2,no,2,right,central,no,no-recurrence-events
-40-49,premeno,50-54,0-2,no,2,left,left_low,no,no-recurrence-events
-50-59,ge40,30-34,6-8,yes,3,left,right_low,no,recurrence-events
-40-49,premeno,40-44,0-2,no,1,left,left_low,no,recurrence-events
-40-49,premeno,20-24,0-2,no,1,right,right_up,no,no-recurrence-events
-40-49,premeno,35-39,0-2,no,1,right,left_up,no,recurrence-events
-50-59,ge40,30-34,0-2,no,3,right,left_low,no,no-recurrence-events
-60-69,lt40,10-14,0-2,no,1,left,right_up,no,no-recurrence-events
-60-69,ge40,30-34,0-2,no,3,right,central,no,recurrence-events
-40-49,premeno,20-24,0-2,no,3,right,left_low,yes,no-recurrence-events
-60-69,ge40,45-49,6-8,yes,3,left,central,no,no-recurrence-events
-60-69,ge40,15-19,0-2,no,2,left,left_low,no,no-recurrence-events
-50-59,ge40,20-24,0-2,no,3,left,left_up,no,no-recurrence-events
-60-69,ge40,25-29,0-2,no,3,left,left_up,no,recurrence-events
-60-69,ge40,30-34,0-2,no,1,right,left_up,no,no-recurrence-events
-60-69,ge40,20-24,0-2,no,3,right,left_low,no,recurrence-events
-50-59,premeno,25-29,3-5,yes,3,left,left_low,yes,recurrence-events
-40-49,premeno,20-24,0-2,no,2,left,right_low,no,no-recurrence-events
-50-59,premeno,10-14,0-2,no,1,left,left_low,no,no-recurrence-events
-30-39,premeno,40-44,3-5,no,3,right,right_up,yes,no-recurrence-events
-60-69,ge40,20-24,0-2,no,1,left,left_low,no,no-recurrence-events
-50-59,ge40,30-34,3-5,no,3,right,left_up,no,recurrence-events
-50-59,ge40,40-44,0-2,no,2,left,left_low,no,no-recurrence-events
-40-49,premeno,25-29,0-2,no,1,left,right_low,no,no-recurrence-events
-50-59,lt40,20-24,0-2,?,1,left,left_low,no,recurrence-events
-40-49,premeno,25-29,0-2,no,2,left,left_up,no,no-recurrence-events
-40-49,premeno,20-24,3-5,no,2,right,left_up,no,no-recurrence-events
-50-59,ge40,25-29,0-2,no,3,left,right_up,no,no-recurrence-events
-30-39,premeno,40-44,0-2,no,2,left,left_low,yes,no-recurrence-events
-50-59,ge40,5-9,0-2,no,2,right,right_up,no,no-recurrence-events
-60-69,ge40,10-14,0-2,no,1,left,left_up,no,no-recurrence-events
-40-49,premeno,15-19,0-2,no,2,left,left_low,no,no-recurrence-events
-30-39,premeno,30-34,9-11,no,2,right,left_up,yes,recurrence-events
-50-59,premeno,25-29,0-2,yes,2,left,left_up,no,no-recurrence-events
-50-59,premeno,35-39,15-17,yes,3,right,right_up,no,recurrence-events
-60-69,ge40,25-29,0-2,no,2,right,left_low,no,no-recurrence-events
-50-59,premeno,30-34,3-5,yes,2,left,left_low,yes,no-recurrence-events
-40-49,premeno,25-29,0-2,no,1,right,left_low,yes,no-recurrence-events
-30-39,premeno,30-34,0-2,no,1,right,left_up,no,recurrence-events
-70-79,ge40,10-14,0-2,no,2,left,central,no,no-recurrence-events
-30-39,premeno,30-34,3-5,no,3,right,left_up,yes,recurrence-events
-60-69,ge40,15-19,0-2,no,2,right,left_up,no,no-recurrence-events
-50-59,ge40,15-19,0-2,no,1,right,central,no,no-recurrence-events
-50-59,ge40,25-29,0-2,no,1,left,right_low,no,no-recurrence-events
-60-69,ge40,25-29,3-5,?,1,right,left_up,yes,no-recurrence-events
-40-49,premeno,20-24,0-2,no,1,right,left_low,no,no-recurrence-events
-50-59,ge40,40-44,0-2,no,3,left,left_up,no,no-recurrence-events
-40-49,premeno,25-29,0-2,?,2,left,right_low,yes,no-recurrence-events
-30-39,premeno,35-39,0-2,no,3,left,left_low,no,recurrence-events
-50-59,premeno,25-29,0-2,no,1,left,left_low,no,no-recurrence-events
-30-39,premeno,15-19,0-2,no,1,left,left_low,no,no-recurrence-events
-50-59,ge40,25-29,0-2,no,2,right,left_up,no,no-recurrence-events
-40-49,premeno,30-34,0-2,no,1,left,right_up,no,no-recurrence-events
-40-49,premeno,30-34,0-2,no,2,right,right_up,yes,no-recurrence-events
-30-39,premeno,25-29,0-2,no,2,left,left_low,no,no-recurrence-events
-40-49,premeno,30-34,0-2,no,3,right,right_up,no,recurrence-events
-40-49,premeno,10-14,0-2,no,2,right,left_low,no,no-recurrence-events
-30-39,premeno,0-4,0-2,no,2,right,central,no,no-recurrence-events
-40-49,premeno,0-4,0-2,no,2,right,right_low,no,no-recurrence-events
-40-49,ge40,20-24,0-2,no,2,right,left_up,no,recurrence-events
-60-69,lt40,30-34,0-2,no,1,left,left_low,no,no-recurrence-events
-50-59,premeno,15-19,0-2,no,1,left,left_low,no,no-recurrence-events
-60-69,ge40,25-29,0-2,no,3,left,right_low,yes,recurrence-events
-60-69,ge40,20-24,0-2,no,1,left,left_low,no,no-recurrence-events
-40-49,premeno,25-29,0-2,no,2,left,left_low,yes,recurrence-events
-60-69,ge40,25-29,0-2,no,3,right,left_low,no,no-recurrence-events
-40-49,premeno,35-39,0-2,yes,3,right,left_low,yes,no-recurrence-events
-30-39,premeno,20-24,3-5,yes,2,right,left_up,yes,no-recurrence-events
-40-49,premeno,40-44,3-5,yes,3,right,left_up,yes,no-recurrence-events
-40-49,premeno,25-29,9-11,yes,3,right,left_up,no,recurrence-events
-40-49,premeno,30-34,12-14,yes,3,left,left_up,yes,recurrence-events
-50-59,premeno,35-39,0-2,no,2,right,left_up,no,no-recurrence-events
-40-49,premeno,30-34,0-2,yes,3,right,right_up,no,recurrence-events
-60-69,ge40,50-54,0-2,no,2,right,left_up,yes,no-recurrence-events
-30-39,premeno,30-34,6-8,yes,2,right,right_up,no,no-recurrence-events
-40-49,premeno,30-34,0-2,no,1,right,left_up,no,no-recurrence-events
-50-59,ge40,30-34,0-2,no,3,left,?,no,recurrence-events
-40-49,premeno,30-34,6-8,yes,3,right,left_up,no,recurrence-events
-50-59,ge40,30-34,6-8,yes,2,left,right_low,yes,recurrence-events
-40-49,premeno,20-24,0-2,no,2,right,right_up,no,no-recurrence-events
-40-49,premeno,30-34,6-8,no,2,left,left_up,no,no-recurrence-events
-50-59,ge40,35-39,0-2,no,2,left,left_up,no,no-recurrence-events
-50-59,ge40,30-34,0-2,no,1,left,left_up,no,no-recurrence-events
-30-39,premeno,20-24,0-2,no,3,left,central,no,no-recurrence-events
-60-69,ge40,20-24,0-2,no,1,right,left_up,no,recurrence-events
-60-69,ge40,15-19,0-2,no,1,right,left_up,no,no-recurrence-events
-40-49,premeno,30-34,3-5,no,2,right,left_up,no,recurrence-events
-40-49,premeno,25-29,0-2,no,1,right,right_low,no,no-recurrence-events
-30-39,premeno,25-29,0-2,no,2,right,left_low,no,no-recurrence-events
-60-69,ge40,10-14,0-2,no,1,left,left_low,no,no-recurrence-events
-30-39,premeno,30-34,0-2,no,3,left,left_low,no,no-recurrence-events
-50-59,ge40,40-44,0-2,no,3,left,right_up,no,no-recurrence-events
-30-39,premeno,20-24,3-5,no,2,right,central,no,no-recurrence-events
-40-49,premeno,40-44,0-2,no,2,right,left_low,no,no-recurrence-events
-40-49,premeno,20-24,3-5,yes,2,left,left_low,yes,recurrence-events
-60-69,ge40,45-49,0-2,no,1,right,right_up,yes,recurrence-events
-60-69,ge40,30-34,0-2,no,2,left,left_low,yes,no-recurrence-events
-50-59,ge40,30-34,3-5,no,3,left,left_low,no,recurrence-events
-50-59,premeno,30-34,0-2,no,3,left,right_up,no,recurrence-events
-50-59,premeno,25-29,0-2,no,2,right,right_low,no,no-recurrence-events
-40-49,premeno,20-24,0-2,no,2,left,left_up,no,no-recurrence-events
-50-59,ge40,30-34,9-11,yes,3,left,right_low,yes,recurrence-events
-40-49,premeno,25-29,0-2,no,3,left,right_up,no,recurrence-events
-40-49,premeno,20-24,6-8,no,2,right,left_low,yes,no-recurrence-events
-50-59,ge40,10-14,0-2,no,2,left,left_low,no,no-recurrence-events
-60-69,ge40,20-24,0-2,no,2,right,left_up,no,no-recurrence-events
-60-69,ge40,10-14,0-2,no,2,right,left_up,yes,no-recurrence-events
-30-39,premeno,15-19,0-2,no,1,right,left_low,no,recurrence-events
-50-59,ge40,20-24,0-2,no,3,right,left_up,no,no-recurrence-events
-30-39,premeno,35-39,0-2,no,3,left,left_low,no,recurrence-events
-50-59,ge40,30-34,6-8,yes,2,left,left_low,no,no-recurrence-events
-30-39,premeno,25-29,6-8,yes,3,left,right_low,yes,recurrence-events
-50-59,ge40,25-29,0-2,no,1,left,left_low,no,no-recurrence-events
-40-49,premeno,30-34,0-2,no,2,right,right_low,no,no-recurrence-events
-50-59,ge40,40-44,3-5,yes,2,left,left_low,no,no-recurrence-events
-50-59,ge40,35-39,0-2,no,3,left,left_low,no,no-recurrence-events
-40-49,premeno,25-29,0-2,no,3,right,left_up,yes,no-recurrence-events
-60-69,ge40,30-34,0-2,no,2,left,left_up,no,no-recurrence-events
-50-59,ge40,20-24,0-2,no,2,left,left_up,no,recurrence-events
-60-69,ge40,40-44,0-2,no,2,right,left_low,no,recurrence-events
-60-69,ge40,15-19,0-2,no,2,left,left_up,yes,no-recurrence-events
-50-59,premeno,40-44,0-2,no,2,left,left_up,no,no-recurrence-events
-40-49,premeno,10-14,0-2,no,1,right,left_up,no,no-recurrence-events
-30-39,premeno,25-29,3-5,yes,3,left,left_low,yes,recurrence-events
-50-59,ge40,20-24,0-2,no,1,right,left_low,no,no-recurrence-events
-30-39,premeno,25-29,6-8,yes,2,right,left_up,yes,no-recurrence-events
-30-39,premeno,10-14,0-2,no,1,right,left_low,no,no-recurrence-events
-40-49,premeno,10-14,0-2,no,1,right,left_up,no,no-recurrence-events
-50-59,premeno,25-29,3-5,yes,2,left,left_low,yes,no-recurrence-events
-40-49,ge40,30-34,3-5,no,3,left,left_low,no,recurrence-events
-30-39,premeno,20-24,3-5,yes,2,left,left_low,no,recurrence-events
-40-49,premeno,10-14,0-2,no,2,left,left_up,no,no-recurrence-events
-50-59,ge40,20-24,0-2,no,3,left,left_up,no,no-recurrence-events
-40-49,premeno,20-24,0-2,no,1,left,right_low,no,no-recurrence-events
-30-39,premeno,25-29,0-2,no,1,left,central,no,no-recurrence-events
-50-59,ge40,15-19,0-2,no,2,right,right_up,no,no-recurrence-events
-50-59,ge40,30-34,0-2,no,1,right,right_up,no,no-recurrence-events
-50-59,ge40,25-29,3-5,yes,3,right,left_up,no,no-recurrence-events
-50-59,premeno,25-29,0-2,no,2,left,left_low,no,no-recurrence-events
-60-69,ge40,10-14,0-2,no,2,left,left_low,no,no-recurrence-events
-50-59,premeno,15-19,0-2,no,2,right,left_low,no,no-recurrence-events
-50-59,premeno,10-14,3-5,no,1,right,left_up,no,no-recurrence-events
-40-49,premeno,15-19,15-17,yes,3,left,left_low,no,recurrence-events
-40-49,premeno,45-49,0-2,no,2,left,left_low,yes,no-recurrence-events
-50-59,ge40,10-14,0-2,no,1,left,left_low,no,no-recurrence-events
-50-59,ge40,25-29,6-8,no,3,left,left_low,yes,recurrence-events
-50-59,premeno,10-14,0-2,no,3,left,left_low,no,no-recurrence-events
-40-49,premeno,30-34,0-2,no,3,right,right_up,no,no-recurrence-events
-60-69,ge40,20-24,24-26,yes,3,left,left_low,yes,recurrence-events
-50-59,ge40,30-34,0-2,no,1,right,left_low,no,no-recurrence-events
-40-49,premeno,30-34,0-2,no,1,left,left_low,no,no-recurrence-events
-50-59,ge40,10-14,0-2,no,1,right,left_up,no,no-recurrence-events
-40-49,ge40,20-24,3-5,no,3,right,left_low,yes,recurrence-events
-50-59,ge40,25-29,15-17,yes,3,right,left_up,no,no-recurrence-events
-50-59,lt40,15-19,0-2,no,2,left,left_low,no,no-recurrence-events
-40-49,premeno,10-14,0-2,no,2,left,left_low,no,no-recurrence-events
-50-59,ge40,30-34,9-11,?,3,left,left_up,yes,no-recurrence-events
-40-49,premeno,10-14,0-2,no,2,right,left_up,no,no-recurrence-events
-60-69,ge40,25-29,0-2,no,3,right,left_up,no,no-recurrence-events
-50-59,premeno,20-24,3-5,yes,2,left,left_low,no,no-recurrence-events
-60-69,ge40,30-34,3-5,yes,3,left,left_low,no,no-recurrence-events
-40-49,premeno,20-24,0-2,no,2,left,left_low,no,no-recurrence-events
-50-59,ge40,40-44,0-2,no,3,right,left_up,no,no-recurrence-events
-70-79,ge40,20-24,0-2,no,3,left,left_up,no,no-recurrence-events
-40-49,premeno,30-34,3-5,yes,2,right,left_low,no,no-recurrence-events
-50-59,ge40,35-39,15-17,no,3,left,left_low,no,no-recurrence-events
-30-39,premeno,0-4,0-2,no,2,right,central,no,recurrence-events
-50-59,ge40,0-4,0-2,no,1,left,left_low,no,no-recurrence-events
-40-49,premeno,0-4,0-2,no,3,left,central,no,no-recurrence-events
-40-49,premeno,30-34,3-5,yes,2,left,right_up,no,recurrence-events
-40-49,premeno,25-29,0-2,no,2,right,left_up,no,no-recurrence-events
-40-49,premeno,20-24,3-5,yes,2,right,right_up,yes,recurrence-events
-40-49,premeno,5-9,0-2,no,1,left,left_low,yes,no-recurrence-events
-60-69,ge40,30-34,3-5,yes,2,left,central,yes,recurrence-events
-50-59,ge40,35-39,0-2,no,2,left,left_low,no,recurrence-events
-60-69,ge40,15-19,0-2,no,2,right,left_up,no,no-recurrence-events
-60-69,ge40,20-24,0-2,no,2,left,left_up,no,no-recurrence-events
-40-49,premeno,25-29,0-2,no,3,left,left_up,no,recurrence-events
-60-69,ge40,15-19,0-2,no,2,right,left_low,no,no-recurrence-events
-50-59,lt40,30-34,0-2,no,3,right,left_up,no,no-recurrence-events
-60-69,ge40,30-34,6-8,yes,2,right,right_up,no,no-recurrence-events
-50-59,premeno,25-29,3-5,no,2,right,left_up,yes,no-recurrence-events
-70-79,ge40,40-44,0-2,no,1,right,right_up,no,no-recurrence-events
-50-59,ge40,20-24,3-5,yes,2,right,left_up,no,no-recurrence-events
-50-59,ge40,20-24,3-5,yes,3,right,right_up,no,recurrence-events
-30-39,premeno,15-19,0-2,no,1,left,left_low,no,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,0,0,0,0,1,recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,1,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0,recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0,0,1,recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,?,1,0,0,1,0,1,0,0,0,0,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,0,1,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,0,recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,1,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,1,0,0,0,1,no-recurrence-events
+0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,1,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1,recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,1,recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,0,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,1,0,0,0,0,recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,1,0,0,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,1,recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,recurrence-events
+0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,0,1,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,1,recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,1,recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,1,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1,recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,0,1,1,recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,1,0,0,0,0,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,0,0,1,recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,1,0,0,0,1,recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,1,0,0,0,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,0,0,0,0,1,recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,?,1,0,0,0,0,1,0,0,0,1,recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,0,1,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,1,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,0,recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,1,recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,1,0,0,0,0,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1,recurrence-events
+0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,1,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,0,0,0,0,0,recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,0,0,1,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,?,1,0,0,1,1,0,0,0,0,0,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,?,0,1,0,0,0,0,0,1,0,0,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,1,recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,1,0,0,0,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,1,0,0,1,recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,1,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,0,1,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,1,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,1,recurrence-events
+0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,1,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,1,recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,1,recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,0,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,?,?,?,?,?,1,recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,1,recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,1,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,1,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1,recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,1,recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,0,1,0,1,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,0,1,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,0,1,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,1,0,0,0,recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,1,recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,0,1,recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,1,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,0,1,recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,0,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,0,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,1,0,0,0,1,recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,0,0,0,0,1,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,1,recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,1,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,0,0,0,0,0,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0,0,1,recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,1,recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0,0,0,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,1,0,0,0,1,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,1,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,1,recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,1,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,1,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,1,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,1,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,1,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,1,0,0,0,0,recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,?,0,0,1,0,1,0,0,0,0,0,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,1,no-recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,0,1,1,recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,1,recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0,recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0,0,1,no-recurrence-events
+0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,0,0,1,recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,0,no-recurrence-events
+0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,1,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,1,no-recurrence-events
+0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,1,recurrence-events
+0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,1,no-recurrence-events

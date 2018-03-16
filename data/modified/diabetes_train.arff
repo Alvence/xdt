@@ -1,4 +1,4 @@
-@relation pima_diabetes-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
+@relation pima_diabetes-weka.filters.unsupervised.attribute.NominalToBinary-Rfirst-last-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
 
 @attribute preg numeric
 @attribute plas numeric

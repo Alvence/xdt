@@ -55,8 +55,19 @@ public class LRTruth {
 //			System.out.println((Arrays.toString(par)));
 			cof[count++] = par[0];
 		}
+		double sum = 0;
+		for(double c:cof){
+			sum+= Math.abs(c);
+		}
+		
+		for(int i = 0; i < cof.length; i++){
+			if (Math.abs(cof[i]/sum)>0.05){
+				expl.add(i);
+			}
+		}
+		
 //		System.out.println((Arrays.toString(cof)));
-		if(pred == 1){
+/*		if(pred == 0){
 			double sum = 0;
 			for(int i = 0; i < cof.length;i++){
 				if (cof[i]*instance.value(i)>0){
@@ -80,7 +91,9 @@ public class LRTruth {
 					expl.add(i);
 				}
 			}
-		}
+		}*/
+		
+		
 		return expl;
 	}
 	
