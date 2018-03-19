@@ -7,20 +7,17 @@ import java.util.Random;
 import java.util.Set;
 
 import com.unimelb.yunzhejia.xdt.ClassifierTruth;
-import com.yunzhejia.cpxc.util.ClassifierGenerator.ClassifierType;
 import com.yunzhejia.cpxc.util.DataUtils;
 import com.yunzhejia.pattern.IPattern;
 import com.yunzhejia.pattern.MatchAllPattern;
 import com.yunzhejia.pattern.PatternSet;
 import com.yunzhejia.pattern.patternmining.IPatternMiner;
-import com.yunzhejia.pattern.patternmining.ParallelCoordinatesMiner;
 import com.yunzhejia.pattern.patternmining.RFPatternMiner;
 
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Evaluation;
 import weka.core.Instance;
 import weka.core.Instances;
-import weka.core.Utils;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.NominalToBinary;
 import weka.filters.unsupervised.attribute.ReplaceMissingValues;
@@ -38,11 +35,14 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 	double minRatio = 3;
 	int defaultClass=-1;
 	
-	double stepSize = 0.1;
+	//delta - importance
+	double delta = 1e-2;
+	
+	double stepSize = 0.01;
 	double beta = 0.5;
 	
 	double the = 0.01;
-	double gamma = 0.05;
+	double gamma = 0.5;
 	double lambdaP = 0.001;
 	double lambda0 = 0.01; 
 	/** The filter used to make attributes numeric. */
@@ -76,12 +76,13 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 		 instances = Filter.useFilter(instances, m_NominalToBinary);
 		 
 		 
-//		 IPatternMiner pm = new ManualPatternMiner();
+//		 pm = new ManualPatternMiner();
 //		 IPatternMiner pm = new RFPatternMiner();
-//		 IPatternMiner pm = new ParallelCoordinatesMiner();
+//		 pm = new ParallelCoordinatesMiner();
 //		 IPatternMiner pm = new GcGrowthPatternMiner(discretizer);
 		 patterns = pm.minePattern(instances, minSupp);
-
+//		 patterns = new PatternSet();
+//		 patterns.clear();
 		 //make a global pattern that matches all instances
 		 IPattern globalPattern = new MatchAllPattern();
 		 patterns.add(globalPattern);
@@ -108,7 +109,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 			 A.put(p, iniCoe);
 		 }
 	
-		 double[] objs = new double[10];
+		 double[] objs = new double[20];
 		 int obj_index = 0;
 		 
 		 
@@ -147,7 +148,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 				 }
 			 }
 			 double acc = correct*1.0/instances.numInstances();
-			 objs[obj_index%10] = acc;
+			 objs[obj_index%20] = acc;
 			 obj_index++;
 			 
 			 //terminate condition
@@ -155,31 +156,8 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 				 break; 
 			 }
 			 
-			 double[] explLoss = new double[instances.size()];
-			 if(expls!=null){
-			 for(int m = 0; m < instances.size(); m++){
-				 Instance ins = instances.get(m);
-				 if(expls.get((long)m) == null){
-					 explLoss[m] = 0;
-					 continue;
-				 }
-				 
-				 double[] coe = new double[instances.numAttributes()];
-				 double los = 0;
-				 for(int dim = 0; dim < instances.numAttributes(); dim++){
-					 coe[dim] = 0;
-						for(IPattern p : patterns){
-							if(p.match(ins)){
-								coe[dim] += A.get(p)[dim];
-							}
-						}
-					  double ed = (dim == ins.numAttributes()-1? 1 : (expls.get((long)m).contains(dim)?1:0)); 
-							  
-					  los += (coe[dim] - C*ed);
-				 }
-				 explLoss[m] = los;
-			 }
-			 }
+			
+			 
 			 
 			 
 //			 System.out.println("preds:  "+Arrays.toString(preds));
@@ -189,10 +167,11 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 			 
 			 for(IPattern p : patterns){
 				 double[] coet = new double[instances.numAttributes()];
-				 
+				 double[] coe = new double[instances.numAttributes()];
 				 double[] coe_current = new double[instances.numAttributes()];
 				 for(int k = 0; k < coe_current.length; k++){
 					 coe_current[k] = A.get(p)[k];
+					 coe[k] = A.get(p)[k];
 				 }
 				//M1 optimization
 				 double theta = 0.0;
@@ -218,24 +197,44 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 				 
 				 
 				 for(int d = 0; d < coet.length; d++){
+					
 					 double der = 0;
 					 
 					 double der2 = 0;
 					 for (int i = 0; i < instances.numInstances();i++){
 						 Instance ins = instances.get(i);
+						 
+//						 for(int dim = 0; dim < coe.length; dim++){
+//								coe[dim] = 0;
+//								for(IPattern pa : patterns){
+//									if(pa.match(ins)){
+//										coe[dim] += A.get(pa)[dim];
+//									}
+//								}
+//						 }
+//
+//						 double pred = 0;
+//						 for(int dim = 0; dim < coe.length; dim++){
+//							 pred+= coe[dim] * (dim == ins.numAttributes()-1? 1:ins.value(dim));
+//						 }
+//						 preds[i] = pred;
+						 
+						 
 						 double y = ins.classValue();
 						 der += (-1)*(y-(1/(1+Math.exp(-1*preds[i]))))  *(p.match(ins)?1:0)*(d == ins.numAttributes()-1? 1:ins.value(d));
+					 
+						 //expl loss
+						 if(expls!=null){
+						 if(expls.get((long)i).contains(d) && Math.abs(coe[d])<delta){
+							 der2 += (p.match(ins)?1:0);
+						 }else if((!expls.get((long)i).contains(d))&& Math.abs(coe[d])>delta){
+							 der2 += (coe[d]>0?1:-1)* (p.match(ins)?1:0);
+						 }
+						 }
 					 }
 					 
-					 if(expls!=null){
-					 for(int m = 0; m < instances.size();m++){
-						 if (expls.get((long)m) == null){
-							 continue;
-						 }
-						 Instance ins = instances.get(m);
-						 der2+= explLoss[m] * (p.match(ins)?1:0);
-					 }
-					 }
+					 
+					 
 //					 der = der/instances.numInstances();
 //					 System.out.println(der);
 					 coet[d] = A.get(p)[d] - stepSize*der;
@@ -245,11 +244,11 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 //					 System.out.println(der);
 					 
 					 if(! (p instanceof MatchAllPattern)){
-						 coet[d] = (coet[d]>0?1:-1)*Math.min(Math.abs(coet[d]),theta);
+//						 coet[d] = (coet[d]>0?1:-1)*Math.min(Math.abs(coet[d]),theta);
 					 }
-					 coet[d] = (coet[d]>0?1:-1)* (Math.abs(coet[d] - stepSize*lambda0)>0? Math.abs(coet[d] - stepSize*lambda0):0 );
+//					 coet[d] = (coet[d]>0?1:-1)* (Math.abs(coet[d] - stepSize*lambda0)>0? Math.abs(coet[d] - stepSize*lambda0):0 );
 					 
-					 coet[d] = (Math.abs(coet[d])<1e-4?0:coet[d]);
+					 coet[d] = (Math.abs(coet[d])<delta?0:coet[d]);
 				 }
 				 At.put(p, coet);
 			 }
@@ -330,28 +329,68 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 		return nei;
 	}
 	*/
-	public static void main(String[] args) throws Exception{
+	
+	
+	public static void ttmain(String[] args) throws Exception{
 //		String[] files = { /*"adult",*/"balloon","blood"/*,"breast-cancer","chess"*/,"crx","diabetes","hepatitis",/*"ionosphere",*/
 //				"labor","sick","vote"};
 //		String[] files = {"anneal","balloon","blood","breast-cancer",/*"chess",*/"crx","diabetes","glass","hepatitis","ionosphere", "labor","sick","vote"};
 //		String[] files = {"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
-		String[] files = {"balloon","blood","diabetes","hepatitis", "labor", "vote","crx","sick"};
+//		String[] files = {"balloon","blood","crx","diabetes","hepatitis", "labor", "sick", "vote"};
+		String[] files = {"synthetic_10samples"};
 		
-		IPatternMiner[] pms = {new RFPatternMiner(), new ParallelCoordinatesMiner()};
+		IPatternMiner[] pms = {new RFPatternMiner()};//, new ParallelCoordinatesMiner()};
 		boolean[] flags = { true};//, false};
 //		PrintWriter writer = new PrintWriter(new File("tmp/stats.txt"));
 		for(String file:files){
 				for(boolean flag:flags){
 				for(IPatternMiner pm:pms){
-			Instances train = DataUtils.load("data/noisy50/"+file+"_train.arff");
-			Instances test = DataUtils.load("data/noisy50/"+file+"_test.arff");
+			Instances train = DataUtils.load("data/"+file+"_train.arff");
+			Instances test = DataUtils.load("data/"+file+"_train.arff");
 //			Instances train = DataUtils.load("data/"+"synthetic_10samples.arff");
 //			Instances test = DataUtils.load("data/"+"synthetic_10samples.arff");
 			
-			Map<Long, Set<Integer>> expls = ClassifierTruth.readFromFile("data/noisy50/expl/"+file+"_train.expl");
-			Map<Long, Set<Integer>> explsTest = ClassifierTruth.readFromFile("data/noisy50/expl/"+file+"_test.expl");
+			Map<Long, Set<Integer>> expls = ClassifierTruth.readFromFile("data/"+file+"_train.expl");
+			Map<Long, Set<Integer>> explsTest = ClassifierTruth.readFromFile("data/"+file+"_train.expl");
 			ExplPartitionWiseLinearModels cl = new ExplPartitionWiseLinearModels();
-//			AbstractClassifier cl = ClassifierGenerator.getClassifier(type);
+//			AbstractClassifier cl = ClassifierGenerator.getClassifier(ClassifierGenerator.ClassifierType.LOGISTIC);
+			
+			Evaluation eval = new Evaluation(test);
+			
+//			cl.buildClassifier(train);
+//			cl.buildClassifierWithExpl(train, expls);
+			cl.buildClassifierWithExpl(pm, train, flag?expls:null);
+			eval.evaluateModel(cl, test);
+			double losX = ExplEvaluation.evalExpl(cl,test,explsTest);
+			
+			System.out.println("data ="+ file +"pm="+pm+" flag="+flag+" accuracy="+ eval.pctCorrect()+"  losExpl="+losX);
+			}}
+		}
+	}
+	
+	public static void main(String[] args) throws Exception{
+//		String[] files = { /*"adult",*/"balloon","blood"/*,"breast-cancer","chess"*/,"crx","diabetes","hepatitis",/*"ionosphere",*/
+//				"labor","sick","vote"};
+//		String[] files = {"anneal","balloon","blood","breast-cancer",/*"chess",*/"crx","diabetes","glass","hepatitis","ionosphere", "labor","sick","vote"};
+//		String[] files = {"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
+		String[] files = {"balloon","blood","crx","diabetes","hepatitis", "labor", "sick", "vote"};
+//		String[] files = {"synthetic_10samples"};
+		
+		IPatternMiner[] pms = {new RFPatternMiner()};//, new ParallelCoordinatesMiner()};
+		boolean[] flags = { true, false};
+//		PrintWriter writer = new PrintWriter(new File("tmp/stats.txt"));
+		for(String file:files){
+				for(boolean flag:flags){
+				for(IPatternMiner pm:pms){
+			Instances train = DataUtils.load("data/modified/"+file+"_train.arff");
+			Instances test = DataUtils.load("data/modified/"+file+"_test.arff");
+//			Instances train = DataUtils.load("data/"+"synthetic_10samples.arff");
+//			Instances test = DataUtils.load("data/"+"synthetic_10samples.arff");
+			
+			Map<Long, Set<Integer>> expls = ClassifierTruth.readFromFile("data/modified/expl/"+file+"_train.expl");
+			Map<Long, Set<Integer>> explsTest = ClassifierTruth.readFromFile("data/modified/expl/"+file+"_test.expl");
+			ExplPartitionWiseLinearModels cl = new ExplPartitionWiseLinearModels();
+//			AbstractClassifier cl = ClassifierGenerator.getClassifier(ClassifierGenerator.ClassifierType.LOGISTIC);
 			
 			Evaluation eval = new Evaluation(test);
 			
