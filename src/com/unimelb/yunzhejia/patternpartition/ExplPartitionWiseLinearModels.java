@@ -53,7 +53,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 	public ReplaceMissingValues m_ReplaceMissingValues;
 	Random rand = new Random(0);
 	
-	int T = 3000;
+	int T = 10000;
 	double C = 1;
 	@Override
 	public void buildClassifier(Instances data) throws Exception {
@@ -110,7 +110,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 			 A.put(p, iniCoe);
 		 }
 	
-		 double[] objs = new double[20];
+		 double[] objs = new double[10];
 		 int obj_index = 0;
 		 
 		 
@@ -149,7 +149,13 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 				 }
 			 }
 			 double acc = correct*1.0/instances.numInstances();
-			 objs[obj_index%20] = acc;
+			 double losX = 0;
+			 if (expls!=null){
+				 losX = ExplEvaluation.evalExpl(this,instances,expls);
+			 }
+			 
+			 
+			 objs[obj_index%10] = acc+ gamma*losX;
 			 obj_index++;
 			 
 			 //terminate condition
@@ -247,7 +253,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 					 if(! (p instanceof MatchAllPattern)){
 //						 coet[d] = (coet[d]>0?1:-1)*Math.min(Math.abs(coet[d]),theta);
 					 }
-//					 coet[d] = (coet[d]>0?1:-1)* (Math.abs(coet[d] - stepSize*lambda0)>0? Math.abs(coet[d] - stepSize*lambda0):0 );
+//					 coet[d] = (coet[d]>0?1:-1)* ((Math.abs(coet[d] - stepSize*lambda0)>0? Math.abs(coet[d] - stepSize*lambda0):0 ));
 					 
 					 coet[d] = (Math.abs(coet[d])<delta?0:coet[d]);
 				 }
@@ -375,7 +381,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 //		String[] files = {"anneal","balloon","blood","breast-cancer",/*"chess",*/"crx","diabetes","glass","hepatitis","ionosphere", "labor","sick","vote"};
 //		String[] files = {"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
 		String[] files = {"balloon","blood","crx","diabetes","hepatitis", "labor", "sick", "vote"};
-//		String[] files = {"synthetic_10samples"};
+//		String[] files = {"hepatitis"};
 		
 		IPatternMiner[] pms = {new RFPatternMiner()};//, new ParallelCoordinatesMiner()};
 		boolean[] flags = { true};//, false};
