@@ -12,6 +12,7 @@ import com.yunzhejia.pattern.IPattern;
 import com.yunzhejia.pattern.MatchAllPattern;
 import com.yunzhejia.pattern.PatternSet;
 import com.yunzhejia.pattern.patternmining.IPatternMiner;
+import com.yunzhejia.pattern.patternmining.ParallelCoordinatesMiner;
 import com.yunzhejia.pattern.patternmining.RFPatternMiner;
 
 import weka.classifiers.AbstractClassifier;
@@ -377,7 +378,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 //		String[] files = {"synthetic_10samples"};
 		
 		IPatternMiner[] pms = {new RFPatternMiner()};//, new ParallelCoordinatesMiner()};
-		boolean[] flags = { true, false};
+		boolean[] flags = { true};//, false};
 //		PrintWriter writer = new PrintWriter(new File("tmp/stats.txt"));
 		for(String file:files){
 				for(boolean flag:flags){
