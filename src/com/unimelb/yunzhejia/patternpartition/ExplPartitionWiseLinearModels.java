@@ -43,7 +43,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 	double beta = 0.5;
 	
 	double the = 0.01;
-	double gamma = 0.5;
+	double gamma = 0.8;
 	double lambdaP = 0.001;
 	double lambda0 = 0.01; 
 	/** The filter used to make attributes numeric. */
@@ -113,6 +113,8 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 		 double[] objs = new double[10];
 		 int obj_index = 0;
 		 
+		 double oldObj = Double.MAX_VALUE;
+		 double newObj = Double.MAX_VALUE;
 		 
 		 //iteration
 		 for(int t = 1; t < T ; t++){
@@ -124,6 +126,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 			//calc current accuracy
 			 
 			int correct = 0;
+			double explCorr = 0.0;
 			 for (int i = 0; i < instances.numInstances();i++){
 				 Instance ins = instances.get(i);
 				 //calculate errors
@@ -143,25 +146,40 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 				 }
 				 preds[i] = pred;
 				 
+				 //calc expl loss
+				 if(expls!=null && expls.get((long)i)!=null){
+					 int explCount = 0;
+					 Set<Integer> expl = expls.get((long)i);
+					 for(int index = 0; index<coe.length-1; index++){
+						 double item = coe[index];
+						 if(Math.abs(item)>=delta && expl.contains(index)){
+							 explCount++;
+						 } else if(Math.abs(item)<delta && !expl.contains(index)){
+							 explCount++;
+						 }
+					 }
+					 explCorr += explCount*1.0/(coe.length-1);
+				 }
+				 
 				 int c = pred>0?1:0;
 				 if(c == ins.classValue()){
 					 correct++;
 				 }
 			 }
 			 double acc = correct*1.0/instances.numInstances();
-			 double losX = 0;
-			 if (expls!=null){
-				 losX = ExplEvaluation.evalExpl(this,instances,expls);
-			 }
+			 double losX = explCorr*1.0/expls.size();
 			 
 			 
+//			 System.out.println("acc="+acc+"   losX="+losX);
 			 objs[obj_index%10] = acc+ gamma*losX;
 			 obj_index++;
 			 
 			 //terminate condition
 			 if(terminate(objs)){
-				 break; 
+//				 System.out.println("T="+t);
+//				 break; 
 			 }
+			 
 			 
 			
 			 
@@ -268,11 +286,12 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 	}
 	
 	private boolean terminate(double[] objs) {
+//		System.out.println(Arrays.toString(objs));
 		double dif = 0;
 		for(int i = 0; i < objs.length-1; i++){
 			dif = dif+Math.abs(objs[i+1]-objs[i]);
 		}
-		if(dif<1e-9){
+		if(dif<1e-3){
 			return true;
 		}
 		return false;
@@ -380,8 +399,8 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 //				"labor","sick","vote"};
 //		String[] files = {"anneal","balloon","blood","breast-cancer",/*"chess",*/"crx","diabetes","glass","hepatitis","ionosphere", "labor","sick","vote"};
 //		String[] files = {"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
-		String[] files = {"balloon","blood","crx","diabetes","hepatitis", "labor", "sick", "vote"};
-//		String[] files = {"hepatitis"};
+//		String[] files = {"balloon","blood","crx","diabetes","hepatitis", "labor", "sick", "vote"};
+		String[] files = {"labor", "vote"};
 		
 		IPatternMiner[] pms = {new RFPatternMiner()};//, new ParallelCoordinatesMiner()};
 		boolean[] flags = { true};//, false};
