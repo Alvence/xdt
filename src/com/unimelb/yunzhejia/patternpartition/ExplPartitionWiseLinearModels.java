@@ -43,7 +43,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 	double beta = 0.5;
 	
 	double the = 0.01;
-	double gamma = 0.8;
+	double gamma = 0.5;
 	double lambdaP = 0.001;
 	double lambda0 = 0.01; 
 	/** The filter used to make attributes numeric. */
@@ -53,7 +53,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 	public ReplaceMissingValues m_ReplaceMissingValues;
 	Random rand = new Random(0);
 	
-	int T = 10000;
+	int T = 30000;
 	double C = 1;
 	@Override
 	public void buildClassifier(Instances data) throws Exception {
@@ -400,7 +400,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 //		String[] files = {"anneal","balloon","blood","breast-cancer",/*"chess",*/"crx","diabetes","glass","hepatitis","ionosphere", "labor","sick","vote"};
 //		String[] files = {"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
 //		String[] files = {"balloon","blood","crx","diabetes","hepatitis", "labor", "sick", "vote"};
-		String[] files = {"labor", "vote"};
+		String[] files = {"vote"};
 		
 		IPatternMiner[] pms = {new RFPatternMiner()};//, new ParallelCoordinatesMiner()};
 		boolean[] flags = { true};//, false};
