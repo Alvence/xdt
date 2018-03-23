@@ -167,7 +167,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 				 }
 			 }
 			 double acc = correct*1.0/instances.numInstances();
-			 double losX = explCorr*1.0/expls.size();
+			 double losX = 0;//explCorr*1.0/expls.size();
 			 
 			 
 //			 System.out.println("acc="+acc+"   losX="+losX);
@@ -260,7 +260,12 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 					 
 					 
 					 
-//					 der = der/instances.numInstances();
+					 der = der/instances.numInstances();
+					 
+					 if(expls!=null && expls.size()>0){
+						 der2 /= expls.size();
+					 }
+					 
 //					 System.out.println(der);
 					 coet[d] = A.get(p)[d] - stepSize*der;
 					 
