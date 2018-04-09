@@ -12,6 +12,7 @@ import com.yunzhejia.pattern.IPattern;
 import com.yunzhejia.pattern.MatchAllPattern;
 import com.yunzhejia.pattern.PatternSet;
 import com.yunzhejia.pattern.patternmining.IPatternMiner;
+import com.yunzhejia.pattern.patternmining.ParallelCoordinatesMiner;
 import com.yunzhejia.pattern.patternmining.RFPatternMiner;
 
 import weka.classifiers.AbstractClassifier;
@@ -22,7 +23,7 @@ import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.NominalToBinary;
 import weka.filters.unsupervised.attribute.ReplaceMissingValues;
 
-public class ExplPartitionWiseLinearModels extends AbstractClassifier {
+public class ExplPartitionWiseLinearModels_Old extends AbstractClassifier {
 
 	Instances train;
 	
@@ -38,6 +39,13 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 	//delta - importance
 	double delta = 1e-2;
 	
+	double stepSize = 0.01;
+	double beta = 0.5;
+	
+	double the = 0.01;
+	double gamma = 0.5;
+	double lambdaP = 0.001;
+	double lambda0 = 0.0001; 
 	/** The filter used to make attributes numeric. */
 	public NominalToBinary m_NominalToBinary;
 
@@ -53,64 +61,6 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 	}
 	
 	public void buildClassifierWithExpl( IPatternMiner pm ,Instances train, Map<Long, Set<Integer>> expls) throws Exception {
-//		double gammas[] = {0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0};
-		double lambdas[] = {0.00001,0.0001,0.001,0.01,0.1};
-		double steps[] = {0.01,0.05,0.1,0.2};
-		
-		double gamma = 0.5;
-		
-		double bestStep = 0.0;
-		double bestLambda = 0.0;
-		double bestObj = 0.0;
-		
-		Instances temp = new Instances(train);
-		
-		Instances valid = new Instances(temp,0);
-		Instances test = new Instances(temp,0);
-		Map<Long, Set<Integer>> validExpl = new HashMap<>();
-		Map<Long, Set<Integer>> testExpl = new HashMap<>();
-
-		
-		int pivot = (int)(temp.numInstances()*0.7);
-		for(int i = 0; i < temp.numInstances(); i++){
-			if( i < pivot){
-				valid.add(temp.get(i));
-				if(expls.containsKey((long)i)){
-					validExpl.put((long)i, expls.get((long)i));
-				}
-			}else{
-				test.add(temp.get(i));
-				if(expls.containsKey((long)i)){
-					testExpl.put((long)(i-pivot), expls.get((long)i));
-				}
-			}
-		}
-		
-		for(double step:steps){
-			for(double lambda:lambdas){
-				ExplPartitionWiseLinearModels cl = new ExplPartitionWiseLinearModels();
-				cl.buildClassifierWithExpl(pm, valid, validExpl, gamma, lambda, step);
-				
-				Evaluation eval = new Evaluation(test);
-				
-//				cl.buildClassifier(train);
-//				cl.buildClassifxierWithExpl(train, expls);
-				eval.evaluateModel(cl, test);
-				double losX = ExplEvaluation.evalExpl(cl,test,testExpl);
-				double obj = eval.correct()/100.0 + gamma * losX;
-				if(obj > bestObj){
-					bestStep = step;
-					bestLambda = lambda;
-					bestObj = obj;
-				}
-			}
-		}
-		
-		System.out.println("lambda="+bestLambda+"   step="+bestStep);
-		buildClassifierWithExpl(pm,train,expls,gamma, bestLambda, bestStep);
-	}
-	
-	public void buildClassifierWithExpl( IPatternMiner pm ,Instances train, Map<Long, Set<Integer>> expls, double gamma, double lambdaP, double stepSize) throws Exception {
 		 Instances instances = new Instances(train);
 		 instances.deleteWithMissingClass();
 		 
@@ -421,14 +371,13 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 	*/
 	
 	
-	public static void aamain(String[] args) throws Exception{
+	public static void ttmain(String[] args) throws Exception{
 //		String[] files = { /*"adult",*/"balloon","blood"/*,"breast-cancer","chess"*/,"crx","diabetes","hepatitis",/*"ionosphere",*/
 //				"labor","sick","vote"};
 //		String[] files = {"anneal","balloon","blood","breast-cancer",/*"chess",*/"crx","diabetes","glass","hepatitis","ionosphere", "labor","sick","vote"};
 //		String[] files = {"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
 //		String[] files = {"balloon","blood","crx","diabetes","hepatitis", "labor", "sick", "vote"};
 		String[] files = {"synthetic_10samples"};
-		
 		
 		IPatternMiner[] pms = {new RFPatternMiner()};//, new ParallelCoordinatesMiner()};
 		boolean[] flags = { true};//, false};
@@ -443,7 +392,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 			
 			Map<Long, Set<Integer>> expls = ClassifierTruth.readFromFile("data/"+file+"_train.expl");
 			Map<Long, Set<Integer>> explsTest = ClassifierTruth.readFromFile("data/"+file+"_train.expl");
-			ExplPartitionWiseLinearModels cl = new ExplPartitionWiseLinearModels();
+			ExplPartitionWiseLinearModels_Old cl = new ExplPartitionWiseLinearModels_Old();
 //			AbstractClassifier cl = ClassifierGenerator.getClassifier(ClassifierGenerator.ClassifierType.LOGISTIC);
 			
 			Evaluation eval = new Evaluation(test);
@@ -451,11 +400,10 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 //			cl.buildClassifier(train);
 //			cl.buildClassifxierWithExpl(train, expls);
 			cl.buildClassifierWithExpl(pm, train, flag?expls:null);
-//			cl.buildClassifierWithExpl(pm, train, explsTest, 0.5, 0.001, 0.1);
 			eval.evaluateModel(cl, test);
-			double losX = ExplEvaluation.evalExpl(cl,test,explsTest);
+//			double losX = ExplEvaluation.evalExpl(cl,test,explsTest);
 			
-			System.out.println("data ="+ file +"pm="+pm+" flag="+flag+" accuracy="+ eval.pctCorrect()+"  losExpl="+losX);
+//			System.out.println("data ="+ file +"pm="+pm+" flag="+flag+" accuracy="+ eval.pctCorrect()+"  losExpl="+losX);
 			}}
 		}
 	}
@@ -481,7 +429,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 			
 			Map<Long, Set<Integer>> expls = ClassifierTruth.readFromFile("data/modified/expl/"+file+"_train.expl");
 			Map<Long, Set<Integer>> explsTest = ClassifierTruth.readFromFile("data/modified/expl/"+file+"_test.expl");
-			ExplPartitionWiseLinearModels cl = new ExplPartitionWiseLinearModels();
+			ExplPartitionWiseLinearModels_Old cl = new ExplPartitionWiseLinearModels_Old();
 //			AbstractClassifier cl = ClassifierGenerator.getClassifier(ClassifierGenerator.ClassifierType.LOGISTIC);
 			
 			Evaluation eval = new Evaluation(test);
@@ -490,9 +438,9 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 //			cl.buildClassifierWithExpl(train, expls);
 			cl.buildClassifierWithExpl(pm, train, flag?expls:null);
 			eval.evaluateModel(cl, test);
-			double losX = ExplEvaluation.evalExpl(cl,test,explsTest);
+//			double losX = ExplEvaluation.evalExpl(cl,test,explsTest);
 			
-			System.out.println("data ="+ file +"pm="+pm+" flag="+flag+" accuracy="+ eval.pctCorrect()+"  losExpl="+losX);
+//			System.out.println("data ="+ file +"pm="+pm+" flag="+flag+" accuracy="+ eval.pctCorrect()+"  losExpl="+losX);
 			}}
 		}
 	}

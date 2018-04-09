@@ -34,15 +34,19 @@ public class ExplEvaluation {
 			
 			
 			 double[] coe = new double[data.numAttributes()];
+			 double temp = 0;
 			 for(int dim = 0; dim < data.numAttributes(); dim++){
 				 coe[dim] = 0;
 					for(IPattern p : cl.patterns){
 						if(p.match(ins)){
 							coe[dim] += cl.A.get(p)[dim];
+							temp+=coe[dim];
 						}
 					}
 			 }
-			 Utils.normalize(coe);
+			 if(temp>1e-6){
+				 Utils.normalize(coe);
+			 }
 			/* for(int dim = 0; dim < data.numAttributes(); dim++){
 				  double ed = (dim == ins.numAttributes()-1? 1 : (expls.get((long)i).contains(dim)?1:0)); 
 				 
