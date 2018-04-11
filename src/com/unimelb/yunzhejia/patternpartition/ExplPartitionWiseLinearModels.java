@@ -45,8 +45,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 	public ReplaceMissingValues m_ReplaceMissingValues;
 	Random rand = new Random(0);
 	
-	int T = 30000;
-	double C = 1;
+	int T = 1000;
 	@Override
 	public void buildClassifier(Instances data) throws Exception {
 		buildClassifierWithExpl(new RFPatternMiner(),data,null);
@@ -54,8 +53,8 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 	
 	public void buildClassifierWithExpl( IPatternMiner pm ,Instances train, Map<Long, Set<Integer>> expls) throws Exception {
 //		double gammas[] = {0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0};
-		double lambdas[] = {0.00001,0.0001,0.001,0.01,0.1};
-		double steps[] = {0.01,0.05,0.1,0.2};
+		double lambdas[] = {0.001};
+		double steps[] = {0.01,0.1};
 		
 		double gamma = 0.5;
 		
@@ -113,6 +112,15 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 	public void buildClassifierWithExpl( IPatternMiner pm ,Instances train, Map<Long, Set<Integer>> expls, double gamma, double lambdaP, double stepSize) throws Exception {
 		 Instances instances = new Instances(train);
 		 instances.deleteWithMissingClass();
+		 
+		 
+		 double beta1=0.9;
+		 double beta2=0.999;
+		 double eps = 1e-8;
+		 double m0 = 0;
+		 double v0 = 0;
+		 double m1 = 0;
+		 double v1 = 0;
 		 
 		// Replace missing values
 		 m_ReplaceMissingValues = new ReplaceMissingValues();
@@ -217,7 +225,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 				 }
 			 }
 			 double acc = correct*1.0/instances.numInstances();
-			 double losX = 0;//explCorr*1.0/expls.size();
+			 double losX = explCorr*1.0/expls.size();
 			 
 			 
 //			 System.out.println("acc="+acc+"   losX="+losX);
@@ -226,6 +234,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 			 
 			 //terminate condition
 			 if(terminate(objs)){
+//				 System.out.println(Arrays.toString(objs));
 //				 System.out.println("T="+t);
 //				 break; 
 			 }
@@ -276,6 +285,8 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 					 double der = 0;
 					 
 					 double der2 = 0;
+					 
+					 double reg = 0;
 					 for (int i = 0; i < instances.numInstances();i++){
 						 Instance ins = instances.get(i);
 						 
@@ -302,16 +313,23 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 //						 der += (-y)*(1/(1+Math.exp(-y*preds[i])))*(p.match(ins)?1:0)*(d == ins.numAttributes()-1? 1:ins.value(d));
 						 
 						 //expl loss
-						 if(expls!=null){
+						 if(expls!=null && expls.get((long)i)!=null){
 						 if(expls.get((long)i).contains(d) && Math.abs(coe[d])<delta){
 							 der2 += (p.match(ins)?1:0);
 						 }else if((!expls.get((long)i).contains(d))&& Math.abs(coe[d])>delta){
 							 der2 += (coe[d]>0?1:-1)* (p.match(ins)?1:0);
 						 }
+						 	double e = expls.get((long)i).contains(d)?1:0;
+						 	reg += (1-2*e)* (p.match(ins)?1:0);
 						 }
 					 }
 					 
+					 if(expls!=null && expls.size()>0){
+						 reg = reg*gamma / expls.size();
+					 }
 					 
+					 
+					 double gr = 0;
 					 
 					 der = der/instances.numInstances();
 					 
@@ -322,9 +340,25 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 //					 System.out.println(der);
 					 coet[d] = A.get(p)[d] - stepSize*der;
 					 
+					 gr+= der;
+					 
 					 //loss expl
 					 coet[d] = coet[d] - stepSize * gamma* der2;
 //					 System.out.println(der);
+					 
+					 gr+=gamma*der2;
+					 
+					 /*if (coet[d]>stepSize*reg){
+						 coet[d] -= stepSize*reg;
+					 }else if(coet[d]<-stepSize*reg){
+						 coet[d] += stepSize*reg;
+					 }else{
+						 coet[d] = 0;
+					 }*/
+					 
+					 
+					 
+					 
 					 
 					 if(! (p instanceof MatchAllPattern)){
 //						 coet[d] = (coet[d]>0?1:-1)*Math.min(Math.abs(coet[d]),theta);
@@ -334,8 +368,31 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 //							 coet[d] += lambda0;
 //						 }
 //						 coet[d] -= stepSize*lambda0*2*coet[d];
+						 
+						 if (coet[d]>stepSize*lambdaP){
+							 coet[d] -= stepSize*lambdaP;
+							 gr += lambdaP;
+						 }else if(coet[d]<-stepSize*lambdaP){
+							 coet[d] += stepSize*lambdaP;
+							 gr -= lambdaP;
+						 }else{
+							 coet[d] = 0;
+						 }
+						 
 					 }
 //					 coet[d] = (coet[d]>0?1:-1)* ((Math.abs(coet[d] - stepSize*lambda0)>0? Math.abs(coet[d] - stepSize*lambda0):0 ));
+					 
+					 
+					 m1 = beta1 * m0 + (1-beta1)*gr;
+					 v1 = beta2 * v0 + (1-beta2)*gr*gr;
+					 
+					 m0 = m1;
+					 v0 = v1;
+					 
+					 double mt = m1 /(1-beta1);
+					 double vt = v1/(1-beta2);
+					 
+//					 coet[d] = A.get(p)[d] - stepSize/(Math.sqrt(vt)+eps)*mt;
 					 
 					 coet[d] = (Math.abs(coet[d])<delta?0:coet[d]);
 				 }
@@ -428,6 +485,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 //		String[] files = {"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
 //		String[] files = {"balloon","blood","crx","diabetes","hepatitis", "labor", "sick", "vote"};
 		String[] files = {"synthetic_10samples"};
+//		String[] files = {"balloon"};
 		
 		
 		IPatternMiner[] pms = {new RFPatternMiner()};//, new ParallelCoordinatesMiner()};
@@ -465,8 +523,11 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 //				"labor","sick","vote"};
 //		String[] files = {"anneal","balloon","blood","breast-cancer",/*"chess",*/"crx","diabetes","glass","hepatitis","ionosphere", "labor","sick","vote"};
 //		String[] files = {"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
-		String[] files = {"balloon","blood","crx","diabetes","hepatitis", "labor", "sick", "vote"};
-//		String[] files = {"vote"};
+//		String[] files = {"balloon","blood","hepatitis", "labor", "vote","breast-cancer","crx","diabetes"};
+//		String[] files = {"vote","crx","diabetes","planning","vote"}; //"titanic","sonar","hypo"
+		
+//		String[] files = {"titanic","sonar","hypo"};
+		String[] files = {"balloon","blood","crx","diabetes","hepatitis","hypo", "labor","sick","titanic","vote"};
 		
 		IPatternMiner[] pms = {new RFPatternMiner()};//, new ParallelCoordinatesMiner()};
 		boolean[] flags = { true};//, false};
@@ -488,11 +549,11 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 			
 //			cl.buildClassifier(train);
 //			cl.buildClassifierWithExpl(train, expls);
-			cl.buildClassifierWithExpl(pm, train, flag?expls:null);
+			cl.buildClassifierWithExpl(pm, train, flag?expls:null);//,0.5,0.001,0.01);
 			eval.evaluateModel(cl, test);
 			double losX = ExplEvaluation.evalExpl(cl,test,explsTest);
 			
-			System.out.println("data ="+ file +"pm="+pm+" flag="+flag+" accuracy="+ eval.pctCorrect()+"  losExpl="+losX);
+			System.out.println("1000 data ="+ file +"pm="+pm+" flag="+flag+" accuracy="+ eval.pctCorrect()+"  losExpl="+losX);
 			}}
 		}
 	}

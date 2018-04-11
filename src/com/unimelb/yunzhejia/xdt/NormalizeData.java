@@ -11,8 +11,9 @@ public class NormalizeData {
 	
 
 	public static void main(String[] args) throws Exception {
-		String[] files = {"adult","anneal","balloon","blood","breast-cancer","chess","crx","diabetes","glass","hepatitis","ILPD","ionosphere"
-				,"iris","labor","planning","sick","vote"};
+//		String[] files = {"adult","anneal","balloon","blood","breast-cancer","chess","crx","diabetes","glass","hepatitis","ILPD","ionosphere"
+//				,"iris","labor","planning","sick","vote"};
+		String[] files = {"titanic","sonar","hypo"};
 		for(String file:files){
 			Instances train = DataUtils.load("data/original/"+file+"_train.arff");
 			Instances test = DataUtils.load("data/original/"+file+"_test.arff");

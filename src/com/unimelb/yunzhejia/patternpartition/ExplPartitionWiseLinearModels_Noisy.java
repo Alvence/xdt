@@ -20,7 +20,9 @@ public class ExplPartitionWiseLinearModels_Noisy{
 //				"labor","sick","vote"};
 //		String[] files = {"anneal","balloon","blood","breast-cancer",/*"chess",*/"crx","diabetes","glass","hepatitis","ionosphere", "labor","sick","vote"};
 //		String[] files = {"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
-		String[] files = {"balloon","blood","crx","diabetes","hepatitis", "labor", "vote"};
+//		String[] files = {"balloon","blood","crx","diabetes","hepatitis", "labor", "vote"};
+//		String[] files = {"balloon","blood","hepatitis", "labor", "vote","breast-cancer","crx","diabetes","sick"}; //"titanic","sonar","hypo"
+		String[] files = {"balloon","blood","crx","diabetes","hepatitis","hypo", "labor","sick","titanic","vote"};
 		
 		ClassifierType[] types = {ClassifierType.DECISION_TREE};
 		IPatternMiner[] pms = {new RFPatternMiner()};
@@ -47,11 +49,12 @@ public class ExplPartitionWiseLinearModels_Noisy{
 			
 //			cl.buildClassifier(train);
 //			cl.buildClassifierWithExpl(train, expls);
-			cl.buildClassifierWithExpl(pm, train, flag?expls:null);
+//			cl.buildClassifierWithExpl(pm, train, flag?expls:null);
+			cl.buildClassifierWithExpl(pm, train, flag?expls:null);//,0.5,0.001,0.1);
 			eval.evaluateModel(cl, test);
 			double losX = ExplEvaluation.evalExpl(cl,test,explsTest);
 			
-			System.out.println("data ="+ file +" rand="+rand+" flag="+flag+" accuracy="+ eval.pctCorrect()+"  losExpl="+losX);
+			System.out.println("1000data ="+ file +" rand="+rand+" flag="+flag+" accuracy="+ eval.pctCorrect()+"  losExpl="+losX);
 			}}}}
 		}
 	}

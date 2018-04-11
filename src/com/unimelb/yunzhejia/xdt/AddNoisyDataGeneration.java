@@ -14,10 +14,10 @@ import weka.core.Instances;
 
 public class AddNoisyDataGeneration {
 	public static void main(String[] args) throws Exception{
-		String[] files = {"adult","anneal","balloon","blood","breast-cancer","chess","crx","diabetes"
-				,"glass","hepatitis","ILPD","ionosphere","iris","labor","planning","sick","vote"};
+//		String[] files = {"adult","anneal","balloon","blood","breast-cancer","chess","crx","diabetes"
+//				,"glass","hepatitis","ILPD","ionosphere","iris","labor","planning","sick","vote","titanic","sonar","hypo"};
 //		String[] files = {/*"adult",*/"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
-//		String[] files = {"iris"};
+		String[] files = {"titanic","sonar","hypo"};
 		Random rand = new Random(1);
 		double rate = 0.5;
 		
