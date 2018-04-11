@@ -9,6 +9,7 @@ import com.unimelb.yunzhejia.xdt.ClassifierTruth;
 import com.unimelb.yunzhejia.xdt.PCAHelper;
 import com.yunzhejia.pattern.IPattern;
 
+import weka.classifiers.AbstractClassifier;
 import weka.classifiers.functions.Logistic;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -65,7 +66,7 @@ public class ExplEvaluation {
 //		return precisionExpl(expls,trueExpls);
 	}
 	
-	public static double evalExpl(Logistic cl, Instances data, Map<Long, Set<Integer>> trueExpls) throws Exception{
+	public static double evalExpl(AbstractClassifier cl, Instances data, Map<Long, Set<Integer>> trueExpls) throws Exception{
 		Map<Long, Set<Integer>> expls = new HashMap<>();
 		for(int i = 0; i < data.numInstances(); i++){
 			Set<Integer> expl = ClassifierTruth.getGoldFeature(cl, data.get(i), 0.01);
@@ -74,6 +75,7 @@ public class ExplEvaluation {
 		return f1Expl(expls,trueExpls);
 //		return precisionExpl(expls,trueExpls);
 	}
+	
 	
 	public static double evalExpl(Logistic cl, PrincipalComponents pca, Instances data, Map<Long, Set<Integer>> trueExpls) throws Exception{
 		Map<Long, Set<Integer>> expls = new HashMap<>();

@@ -4,15 +4,11 @@ import java.util.Map;
 import java.util.Set;
 
 import com.unimelb.yunzhejia.xdt.ClassifierTruth;
-import com.yunzhejia.cpxc.util.ClassifierGenerator.ClassifierType;
+import com.yunzhejia.cpxc.util.ClassifierGenerator;
 import com.yunzhejia.cpxc.util.DataUtils;
-import com.yunzhejia.pattern.patternmining.IPatternMiner;
-import com.yunzhejia.pattern.patternmining.ParallelCoordinatesMiner;
-import com.yunzhejia.pattern.patternmining.RFPatternMiner;
 
+import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Evaluation;
-import weka.classifiers.functions.Logistic;
-import weka.core.Debug.Log;
 import weka.core.Instances;
 
 public class LR_benchmark {
@@ -33,8 +29,8 @@ for(String file:files){
 	Map<Long, Set<Integer>> expls = ClassifierTruth.readFromFile("data/noisy50/expl/"+file+"_train.expl");
 	Map<Long, Set<Integer>> explsTest = ClassifierTruth.readFromFile("data/noisy50/expl/"+file+"_test.expl");
 //	ExplPartitionWiseLinearModels cl = new ExplPartitionWiseLinearModels();
-//	AbstractClassifier cl = ClassifierGenerator.getClassifier(type);
-	Logistic cl = new Logistic();
+	AbstractClassifier cl = ClassifierGenerator.getClassifier(ClassifierGenerator.ClassifierType.DECISION_TREE);
+//	Logistic cl = new Logistic();
 	
 	Evaluation eval = new Evaluation(test);
 	
