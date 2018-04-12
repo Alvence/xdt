@@ -38,6 +38,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 	//delta - importance
 	double delta = 1e-2;
 	
+	
 	/** The filter used to make attributes numeric. */
 	public NominalToBinary m_NominalToBinary;
 
@@ -45,10 +46,74 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 	public ReplaceMissingValues m_ReplaceMissingValues;
 	Random rand = new Random(0);
 	
-	int T = 1000;
+	int T = 3000;
 	@Override
 	public void buildClassifier(Instances data) throws Exception {
 		buildClassifierWithExpl(new RFPatternMiner(),data,null);
+	}
+	
+	
+	public void buildClassifierWithExpl( IPatternMiner pm ,Instances train, Map<Long, Set<Integer>> expls, double sup,double ratio) throws Exception {
+		this.minSupp = sup;
+		this.minRatio = ratio;
+		double lambdas[] = {0.001};
+		double steps[] = {0.01,0.1};
+		
+		double gamma = 0.5;
+		
+		double bestStep = 0.0;
+		double bestLambda = 0.0;
+		double bestObj = 0.0;
+		
+		Instances temp = new Instances(train);
+		
+		Instances valid = new Instances(temp,0);
+		Instances test = new Instances(temp,0);
+		Map<Long, Set<Integer>> validExpl = new HashMap<>();
+		Map<Long, Set<Integer>> testExpl = new HashMap<>();
+
+		
+		int pivot = (int)(temp.numInstances()*0.7);
+		for(int i = 0; i < temp.numInstances(); i++){
+			if( i < pivot){
+				valid.add(temp.get(i));
+				if(expls.containsKey((long)i)){
+					validExpl.put((long)i, expls.get((long)i));
+				}
+			}else{
+				test.add(temp.get(i));
+				if(expls.containsKey((long)i)){
+					testExpl.put((long)(i-pivot), expls.get((long)i));
+				}
+			}
+		}
+		
+		for(double step:steps){
+			for(double lambda:lambdas){
+				ExplPartitionWiseLinearModels cl = new ExplPartitionWiseLinearModels();
+				cl.minSupp = sup;
+				cl.minRatio = ratio;
+				
+				
+				cl.buildClassifierWithExpl(pm, valid, validExpl, gamma, lambda, step);
+				
+				Evaluation eval = new Evaluation(test);
+				
+//				cl.buildClassifier(train);
+//				cl.buildClassifxierWithExpl(train, expls);
+				eval.evaluateModel(cl, test);
+				double losX = ExplEvaluation.evalExpl(cl,test,testExpl);
+				double obj = eval.correct()/100.0 + gamma * losX;
+				if(obj > bestObj){
+					bestStep = step;
+					bestLambda = lambda;
+					bestObj = obj;
+				}
+			}
+		}
+		
+		System.out.println("lambda="+bestLambda+"   step="+bestStep);
+		buildClassifierWithExpl(pm,train,expls,gamma, bestLambda, bestStep);
 	}
 	
 	public void buildClassifierWithExpl( IPatternMiner pm ,Instances train, Map<Long, Set<Integer>> expls) throws Exception {
@@ -108,6 +173,8 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 		System.out.println("lambda="+bestLambda+"   step="+bestStep);
 		buildClassifierWithExpl(pm,train,expls,gamma, bestLambda, bestStep);
 	}
+	
+	
 	
 	public void buildClassifierWithExpl( IPatternMiner pm ,Instances train, Map<Long, Set<Integer>> expls, double gamma, double lambdaP, double stepSize) throws Exception {
 		 Instances instances = new Instances(train);
@@ -185,6 +252,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 			 
 			int correct = 0;
 			double explCorr = 0.0;
+			int m = 0;
 			 for (int i = 0; i < instances.numInstances();i++){
 				 Instance ins = instances.get(i);
 				 //calculate errors
@@ -204,8 +272,10 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 				 }
 				 preds[i] = pred;
 				 
+				 
 				 //calc expl loss
 				 if(expls!=null && expls.get((long)i)!=null){
+					 m++;
 					 int explCount = 0;
 					 Set<Integer> expl = expls.get((long)i);
 					 for(int index = 0; index<coe.length-1; index++){
@@ -225,7 +295,7 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 				 }
 			 }
 			 double acc = correct*1.0/instances.numInstances();
-			 double losX = explCorr*1.0/expls.size();
+			 double losX = explCorr*1.0/m;
 			 
 			 
 //			 System.out.println("acc="+acc+"   losX="+losX);
@@ -406,6 +476,15 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 //		 }
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	private boolean terminate(double[] objs) {
 //		System.out.println(Arrays.toString(objs));
 		double dif = 0;
@@ -526,35 +605,49 @@ public class ExplPartitionWiseLinearModels extends AbstractClassifier {
 //		String[] files = {"balloon","blood","hepatitis", "labor", "vote","breast-cancer","crx","diabetes"};
 //		String[] files = {"vote","crx","diabetes","planning","vote"}; //"titanic","sonar","hypo"
 		
-//		String[] files = {"titanic","sonar","hypo"};
-		String[] files = {"balloon","blood","crx","diabetes","hepatitis","hypo", "labor","sick","titanic","vote"};
+		String[] files = {"balloon","blood","diabetes","hepatitis","labor"};
+//		String[] files = {"hepatitis"};
+		
+		double[] ratios = {0.1,0.15,0.2,0.3,0.4,0.5};
+//		String[] files = {"balloon","blood","crx","diabetes","hepatitis","hypo", "labor","sick","titanic","vote"};
+		Random rand2 = new Random(1);
+		double threshold = 1;
 		
 		IPatternMiner[] pms = {new RFPatternMiner()};//, new ParallelCoordinatesMiner()};
 		boolean[] flags = { true};//, false};
 //		PrintWriter writer = new PrintWriter(new File("tmp/stats.txt"));
 		for(String file:files){
 				for(boolean flag:flags){
+					for(double ratio:ratios){
 				for(IPatternMiner pm:pms){
 			Instances train = DataUtils.load("data/modified/"+file+"_train.arff");
 			Instances test = DataUtils.load("data/modified/"+file+"_test.arff");
 //			Instances train = DataUtils.load("data/"+"synthetic_10samples.arff");
 //			Instances test = DataUtils.load("data/"+"synthetic_10samples.arff");
 			
-			Map<Long, Set<Integer>> expls = ClassifierTruth.readFromFile("data/modified/expl/"+file+"_train.expl");
+			Map<Long, Set<Integer>> explsT = ClassifierTruth.readFromFile("data/modified/expl/"+file+"_train.expl");
 			Map<Long, Set<Integer>> explsTest = ClassifierTruth.readFromFile("data/modified/expl/"+file+"_test.expl");
 			ExplPartitionWiseLinearModels cl = new ExplPartitionWiseLinearModels();
 //			AbstractClassifier cl = ClassifierGenerator.getClassifier(ClassifierGenerator.ClassifierType.LOGISTIC);
+			
+			Map<Long, Set<Integer>> expls = new HashMap<>();
+			for(Long id:explsT.keySet()){
+				if (rand2.nextDouble() <= threshold){
+					expls.put(id, explsT.get(id));
+				}
+			}
 			
 			Evaluation eval = new Evaluation(test);
 			
 //			cl.buildClassifier(train);
 //			cl.buildClassifierWithExpl(train, expls);
-			cl.buildClassifierWithExpl(pm, train, flag?expls:null);//,0.5,0.001,0.01);
+			cl.buildClassifierWithExpl(pm, train, flag?expls:null,ratio,3);//,0.5,0.001,0.01);
+//			cl.buildClassifierWithExpl(pm, train, flag?expls:null,0.5,0.001,0.1);
 			eval.evaluateModel(cl, test);
 			double losX = ExplEvaluation.evalExpl(cl,test,explsTest);
 			
-			System.out.println("1000 data ="+ file +"pm="+pm+" flag="+flag+" accuracy="+ eval.pctCorrect()+"  losExpl="+losX);
-			}}
+			System.out.println("supp = "+ratio+" data ="+ file +"pm="+pm+" flag="+flag+" accuracy="+ eval.pctCorrect()+"  losExpl="+losX);
+			}}}
 		}
 	}
 	

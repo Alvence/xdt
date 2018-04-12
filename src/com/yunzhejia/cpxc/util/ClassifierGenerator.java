@@ -8,13 +8,14 @@ import weka.classifiers.AbstractClassifier;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.functions.LibSVM;
 import weka.classifiers.functions.Logistic;
+import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
 
 public class ClassifierGenerator implements Serializable{
 	private static final long serialVersionUID = -2578826239599092125L;
 
-	public enum ClassifierType {NAIVE_BAYES, DECISION_TREE, SVM, LOGISTIC, RANDOM_FOREST, XDT};
+	public enum ClassifierType {NAIVE_BAYES, DECISION_TREE, SVM, LOGISTIC, RANDOM_FOREST, XDT, NN};
 	
 	public static AbstractClassifier getClassifier(ClassifierType type){
 		AbstractClassifier classifier = null;
@@ -37,6 +38,8 @@ public class ClassifierGenerator implements Serializable{
 			case XDT:
 				classifier = new M_J48();
 				break;
+			case NN:
+				classifier = new MultilayerPerceptron();
 			default:
 				classifier = new NaiveBayes();
 				break;

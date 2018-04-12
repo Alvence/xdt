@@ -22,7 +22,7 @@ public class ExplPartitionWiseLinearModels_Noisy{
 //		String[] files = {"anneal","balloon","blood","breast-cancer","diabetes","iris","labor","vote"};
 //		String[] files = {"balloon","blood","crx","diabetes","hepatitis", "labor", "vote"};
 //		String[] files = {"balloon","blood","hepatitis", "labor", "vote","breast-cancer","crx","diabetes","sick"}; //"titanic","sonar","hypo"
-		String[] files = {"balloon","blood","crx","diabetes","hepatitis","hypo", "labor","sick","titanic","vote"};
+		String[] files = {"balloon","blood","diabetes","hepatitis","hypo", "labor","titanic","vote"};
 		
 		ClassifierType[] types = {ClassifierType.DECISION_TREE};
 		IPatternMiner[] pms = {new RFPatternMiner()};

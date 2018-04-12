@@ -1,0 +1,14 @@
+@relation mushroom-weka.filters.unsupervised.attribute.NominalToBinary-Rfirst-last-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
+
+@attribute color=PURPLE numeric
+@attribute size=SMALL numeric
+@attribute act=DIP numeric
+@attribute age=CHILD numeric
+@attribute NewNumeric0 numeric
+@attribute class {T,F}
+
+@data
+0,0,0,0,0.104285,T
+0,1,0,0,0.349721,T
+1,0,0,0,0.719807,T
+1,0,0,1,0.849128,F

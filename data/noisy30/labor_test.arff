@@ -1,0 +1,51 @@
+@relation labor-weka.filters.unsupervised.attribute.NominalToBinary-Rfirst-last-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
+
+@attribute duration numeric
+@attribute wage-increase-first-year numeric
+@attribute wage-increase-second-year numeric
+@attribute wage-increase-third-year numeric
+@attribute cost-of-living-adjustment=none numeric
+@attribute cost-of-living-adjustment=tcf numeric
+@attribute cost-of-living-adjustment=tc numeric
+@attribute working-hours numeric
+@attribute pension=none numeric
+@attribute pension=ret_allw numeric
+@attribute pension=empl_contr numeric
+@attribute standby-pay numeric
+@attribute shift-differential numeric
+@attribute education-allowance=no numeric
+@attribute statutory-holidays numeric
+@attribute vacation=below_average numeric
+@attribute vacation=average numeric
+@attribute vacation=generous numeric
+@attribute longterm-disability-assistance=no numeric
+@attribute contribution-to-dental-plan=none numeric
+@attribute contribution-to-dental-plan=half numeric
+@attribute contribution-to-dental-plan=full numeric
+@attribute bereavement-assistance=no numeric
+@attribute contribution-to-health-plan=none numeric
+@attribute contribution-to-health-plan=half numeric
+@attribute contribution-to-health-plan=full numeric
+@attribute NewNumeric0 numeric
+@attribute NewNumeric1 numeric
+@attribute NewNumeric2 numeric
+@attribute NewNumeric3 numeric
+@attribute NewNumeric4 numeric
+@attribute NewNumeric5 numeric
+@attribute NewNumeric6 numeric
+@attribute NewNumeric7 numeric
+@attribute class {bad,good}
+
+@data
+0.5,0,0.2,?,1,0,0,0.846154,0,0,1,?,?,0,0.5,0,0,1,0,1,0,0,0,0,0,1,0.083688,0.905047,0.147826,0.489125,0.708814,0.96694,0.887667,0.571869,bad
+1,0.5,0.5,0.967742,?,?,?,1,?,?,?,?,?,?,0.5,0,1,0,?,0,1,0,0,0,1,0,0.908158,0.788979,0.077684,0.942536,0.937799,0.312956,0.361145,0.181807,good
+1,0,0.2,?,0,1,0,?,0,0,1,?,?,0,?,?,?,?,0,0,1,0,0,?,?,?,0.350842,0.614017,0.500996,0.617315,0.171605,0.394465,0.140454,0.794316,good
+1,0.4,0.3,?,1,0,0,1,0,0,1,?,0.208333,?,0.333333,0,1,0,0,0,0,1,?,0,0,1,0.675387,0.391578,0.138078,0.853283,0.943829,0.083625,0.347073,0.165449,good
+0,0,?,?,0,0,1,1,0,1,0,0.181818,-0.041667,1,0.333333,0,0,1,1,1,0,0,1,1,0,0,0.44992,0.739299,0.985287,0.037934,0.080965,0.22279,0.97678,0.206476,bad
+1,0,0,0,1,0,0,1,1,0,0,?,?,?,0.166667,1,0,0,?,0,1,0,0,0,0,1,0.619022,0.100956,0.940987,0.540634,0.979307,0.367955,0.998613,0.737018,bad
+0,0.16,?,?,1,0,0,0.846154,0,0,1,0,0.083333,1,0,1,0,0,0,0,1,0,?,1,0,0,0.282057,0.887094,0.24238,0.992333,0.625316,0.005646,0.708053,0.292683,bad
+1,0.6,0.48,?,1,0,0,0.846154,0,0,1,0.727273,0.208333,?,0.333333,0,0,1,0,?,?,?,?,0,0,1,0.041151,0.868401,0.763962,0.930329,0.597737,0.950299,0.760187,0.381742,good
+0.5,0.5,0.76,?,?,?,?,0.615385,0,1,0,?,?,0,0.333333,1,0,0,?,0,0,1,?,0,0,1,0.032084,0.403863,0.478398,0.077615,0.539747,0.879144,0.558657,0.835364,good
+0,0.4,?,?,1,0,0,?,1,0,0,?,?,0,0.333333,0,1,0,1,1,0,0,1,1,0,0,0.001395,0.335729,0.630592,0.776342,0.839423,0.211632,0.926157,0.145959,bad
+0.5,0.6,0.5,?,1,0,0,0.846154,?,?,?,1.090909,0.166667,?,0.333333,1,0,0,0,?,?,?,?,0,0,1,0.042958,0.63331,0.425731,0.344923,0.506795,0.790446,0.232268,0.938138,good
+0.5,0.46,0.48,?,?,?,?,0.846154,?,?,?,?,0.125,?,0.5,0,0,1,?,0,0,1,?,0,0,1,0.857342,0.117661,0.282093,0.378318,0.485778,0.071104,0.404411,0.966852,good

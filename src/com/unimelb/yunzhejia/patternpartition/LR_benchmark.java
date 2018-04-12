@@ -29,7 +29,7 @@ for(String file:files){
 	Map<Long, Set<Integer>> expls = ClassifierTruth.readFromFile("data/noisy50/expl/"+file+"_train.expl");
 	Map<Long, Set<Integer>> explsTest = ClassifierTruth.readFromFile("data/noisy50/expl/"+file+"_test.expl");
 //	ExplPartitionWiseLinearModels cl = new ExplPartitionWiseLinearModels();
-	AbstractClassifier cl = ClassifierGenerator.getClassifier(ClassifierGenerator.ClassifierType.DECISION_TREE);
+	AbstractClassifier cl = ClassifierGenerator.getClassifier(ClassifierGenerator.ClassifierType.NN);
 //	Logistic cl = new Logistic();
 	
 	Evaluation eval = new Evaluation(test);
